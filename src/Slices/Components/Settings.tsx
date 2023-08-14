@@ -9,7 +9,6 @@ import {
   Paper,
   Typography,
 } from "@mui/material";
-
 const Settings = () => {
   return (
     <Container maxWidth="md">
@@ -18,7 +17,6 @@ const Settings = () => {
           Settings
         </Typography>
         <Divider />
-
         <List sx={{ marginTop: "20px" }}>
           <ListItem button>
             <ListItemIcon>
