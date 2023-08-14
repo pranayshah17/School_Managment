@@ -5,6 +5,7 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import SchoolIcon from "@mui/icons-material/People";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import SettingsIcon from "@mui/icons-material/Settings";
 import {
   Drawer,
@@ -168,7 +169,13 @@ const Sidebar: React.FC<any> = () => {
             </ListItemIcon>
             <ListItemText primary={hideContent ? "" : "leaveportal"} />
           </ListItem>
-
+          <ListItem component={StyledNavLink} to="/addteacher">
+            {/* Adjust the route */}
+            <ListItemIcon style={{ display: "flex", justifyContent: "center" }}>
+              <PersonAddIcon /> {/* New icon for adding teacher */}
+            </ListItemIcon>
+            <ListItemText primary={hideContent ? "" : "Add Teacher"} />
+          </ListItem>
           <ListItem component={StyledNavLink} to="/settings">
             <ListItemIcon style={{ display: "flex", justifyContent: "center" }}>
               <SettingsIcon />

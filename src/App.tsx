@@ -2,6 +2,7 @@ import { CssBaseline, createTheme } from "@mui/material";
 import { ThemeProvider } from "@mui/system";
 import { useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import AddTeacherForm from "./Slices/Components/AddTeacher";
 import Dashboard from "./Slices/Components/Dashboard";
 import Header from "./Slices/Components/HeaderComponent";
 import LeaveApplicationForm from "./Slices/Components/LeavePortal";
@@ -56,6 +57,7 @@ function App() {
                 <Route path="/profile" element={<Profile />} />
                 <Route path="/logout" element={<LogOut />} />
                 <Route path="/settings" element={<Settings />} />
+                <Route path="/AddTeacher" element={<AddTeacherForm />} />
               </Routes>
             </div>
           </div>
