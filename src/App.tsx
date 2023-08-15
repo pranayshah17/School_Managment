@@ -1,14 +1,15 @@
+import { AddBox, Dashboard, Event, Settings } from "@mui/icons-material";
 import { CssBaseline, createTheme } from "@mui/material";
 import { ThemeProvider } from "@mui/system";
 import { useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import AddTeacherForm from "./Slices/Components/AddTeacher";
-import Dashboard from "./Slices/Components/Dashboard";
 import Header from "./Slices/Components/HeaderComponent";
-import LeaveApplicationForm from "./Slices/Components/LeavePortal";
-import LogOut from "./Slices/Components/LogOut";
-import Profile from "./Slices/Components/Profile";
-import Settings from "./Slices/Components/Settings";
+import LeaveManagement from "./Slices/Components/Pages/LeaveManagment";
+import LeaveApplicationForm from "./Slices/Components/Pages/LeavePortal";
+import LogOut from "./Slices/Components/Pages/LogOut";
+import Profile from "./Slices/Components/Pages/Profile";
+import TeacherForm from "./Slices/Components/Pages/TeacherForm";
+import TeacherSchedules from "./Slices/Components/Pages/TeacherSchedules";
 import Sidebar from "./Slices/Components/Sidebar";
 import LoginPage from "./login_signup/LoginPage";
 import RegistrationForm from "./login_signup/RegistrationForm";
@@ -24,24 +25,48 @@ function App() {
     // Implement your leave submission logic here
     console.log("Leave submitted:", leaveDetails);
   };
+  const handleTeacherFormSubmit = (data: any) => {
+    // Implement your teacher form submission logic here
+    console.log("Teacher form submitted:", data);
+  };
 
   const theme = createTheme();
 
+  const menuItems = [
+    {
+      icon: <Dashboard />,
+      text: "Dashboard",
+      route: "/dashboard",
+    },
+    {
+      icon: <Event />,
+      text: "Leave Management",
+      route: "/leavemanagement",
+    },
+    {
+      icon: <AddBox />,
+      text: "Leave Management",
+      route: "/leavemanagement",
+    },
+    {
+      icon: <AddBox />,
+      text: "Leave Management",
+      route: "/leavemanagement",
+    },
+  ];
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>
         <div className="App" style={{ display: "flex" }}>
           <CssBaseline />
-          {/* Add ThemeProvider here */}
           <Sidebar />
           <div style={{ flex: 1 }}>
-            <Header /> {/* Pass the isOpen prop to the Header component */}
+            <Header />
             <div>
               <Routes>
-                <Route
-                  path="/"
-                  element={<Navigate to="/loginpage" />} // Set LoginPage as the default route
-                />
+                <Route path="/" element={<Navigate to="/loginpage" />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/profile" element={<Profile />} />
                 <Route
                   path="/leaveportal"
                   element={
@@ -49,15 +74,21 @@ function App() {
                   }
                 />
                 <Route
+                  path="/teacherform"
+                  element={<TeacherForm onSubmit={handleTeacherFormSubmit} />}
+                />
+                <Route path="/leavemanagement" element={<LeaveManagement />} />
+                <Route
+                  path="/teacherschedules"
+                  element={<TeacherSchedules />}
+                />
+                <Route path="/settings" element={<Settings />} />
+                <Route path="/logout" element={<LogOut />} />
+                <Route
                   path="/registrationpage"
                   element={<RegistrationForm />}
                 />
                 <Route path="/loginpage" element={<LoginPage />} />
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/logout" element={<LogOut />} />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/AddTeacher" element={<AddTeacherForm />} />
               </Routes>
             </div>
           </div>

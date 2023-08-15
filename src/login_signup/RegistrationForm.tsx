@@ -1,5 +1,6 @@
 import {
   Button,
+  Container,
   FormControl,
   Grid,
   InputLabel,
@@ -37,94 +38,100 @@ const RegistrationForm = () => {
   };
 
   return (
-    <Paper elevation={3} style={{ padding: "16px" }}>
-      <Typography variant="h6" gutterBottom>
-        Registration Form
-      </Typography>
-      <form onSubmit={handleSubmit}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="First Name"
-              name="firstName"
-              fullWidth
-              value={formData.firstName}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              label="Last Name"
-              name="lastName"
-              fullWidth
-              value={formData.lastName}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              label="Username"
-              name="userName"
-              fullWidth
-              value={formData.userName}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              label="Email"
-              name="email"
-              type="email"
-              fullWidth
-              value={formData.email}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              label="Password"
-              name="password"
-              type="password"
-              fullWidth
-              value={formData.password}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              label="Mobile"
-              name="mobile"
-              fullWidth
-              value={formData.mobile}
-              onChange={handleChange}
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <FormControl fullWidth>
-              <InputLabel>Role</InputLabel>
-              <Select
-                label="Role"
-                name="role"
-                value={formData.role}
-                onChange={handleChange}
-              >
-                <MenuItem value="student">Principal</MenuItem>
-                <MenuItem value="teacher">Teacher</MenuItem>
-                <MenuItem value="parent">Student</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
-        </Grid>
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          style={{ marginTop: "16px" }}
+    <Container sx={{ marginTop: "30px" }}>
+      <Paper elevation={3} style={{ padding: "16px" }}>
+        <Typography
+          variant="h6"
+          gutterBottom
+          sx={{ textAlign: "center", marginBottom: "10px" }}
         >
-          Register
-        </Button>
-      </form>
-    </Paper>
+          Registration Form
+        </Typography>
+        <form onSubmit={handleSubmit}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="First Name"
+                name="firstName"
+                fullWidth
+                value={formData.firstName}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                label="Last Name"
+                name="lastName"
+                fullWidth
+                value={formData.lastName}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="Username"
+                name="userName"
+                fullWidth
+                value={formData.userName}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="Email"
+                name="email"
+                type="email"
+                fullWidth
+                value={formData.email}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="Password"
+                name="password"
+                type="password"
+                fullWidth
+                value={formData.password}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                label="Mobile"
+                name="mobile"
+                fullWidth
+                value={formData.mobile}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <FormControl fullWidth>
+                <InputLabel>Role</InputLabel>
+                <Select
+                  label="Role"
+                  name="role"
+                  value={formData.role}
+                  onChange={handleChange}
+                >
+                  <MenuItem value="student">Principal</MenuItem>
+                  <MenuItem value="teacher">Teacher</MenuItem>
+                  <MenuItem value="parent">Student</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+          </Grid>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            style={{ marginTop: "16px" }}
+          >
+            Register
+          </Button>
+        </form>
+      </Paper>
+    </Container>
   );
 };
 
