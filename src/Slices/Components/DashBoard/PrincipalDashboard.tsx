@@ -4,7 +4,7 @@ import AttendanceChart from "./AttendaceChart";
 import GenderChart from "./GenderCharts";
 import StudentCountCard from "./StudentCountCard";
 import TeacherCountCard from "./TeacherCountCard";
-const Dashboard = () => {
+const PrincipalDashboardPage = () => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("sm"));
   const isTablet = useMediaQuery(theme.breakpoints.between("md", "lg"));
@@ -45,4 +45,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default PrincipalDashboardPage;

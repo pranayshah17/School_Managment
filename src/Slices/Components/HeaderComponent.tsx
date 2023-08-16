@@ -1,11 +1,9 @@
 import {
-  AccountCircle,
   Dashboard,
   ExitToApp,
   Mail,
   Menu,
   Notifications,
-  School,
   Search as SearchIcon,
   Settings,
 } from "@mui/icons-material";
@@ -25,6 +23,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
+import { styled } from "@mui/system";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Store/Store";
@@ -37,7 +36,7 @@ import {
   StyledNavLink,
 } from "./Sidebar";
 
-const Header: React.FC<any> = () => {
+const Header: React.FC<any> = ({ menuItems, user }) => {
   const dispatch = useDispatch();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -89,7 +88,9 @@ const Header: React.FC<any> = () => {
     display: "flex",
     flexGrow: 1,
   };
-
+  const CustomListItemIcon = styled(ListItemIcon)(() => ({
+    justifyContent: "center",
+  }));
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const handleDrawerToggle = () => {
@@ -129,7 +130,28 @@ const Header: React.FC<any> = () => {
                 </LogoContainer>
               </DrawerHeader>
               <List>
-                <ListItem component={StyledNavLink} to="/profile">
+                <ListItem component={StyledNavLink} to="/commondashboard">
+                  <ListItemIcon
+                    style={{ display: "flex", justifyContent: "center" }}
+                  >
+                    <Dashboard />
+                  </ListItemIcon>
+                  <ListItemText primary={"Dashboard"} />
+                </ListItem>
+                {menuItems.map((item: any) => (
+                  <ListItem
+                    button
+                    key={item.text}
+                    component={StyledNavLink}
+                    to={item.route}
+                  >
+                    <CustomListItemIcon>{item.icon}</CustomListItemIcon>
+
+                    <ListItemText primary={isOpen ? item.text : ""} />
+                  </ListItem>
+                ))}
+
+                {/* <ListItem component={StyledNavLink} to="/profile">
                   <ListItemIcon
                     style={{ display: "flex", justifyContent: "center" }}
                   >
@@ -138,23 +160,16 @@ const Header: React.FC<any> = () => {
                     </div>
                   </ListItemIcon>
                   <ListItemText primary={"Profile"} />
-                </ListItem>
-                <ListItem component={StyledNavLink} to="/dashboard">
-                  <ListItemIcon
-                    style={{ display: "flex", justifyContent: "center" }}
-                  >
-                    <Dashboard />
-                  </ListItemIcon>
-                  <ListItemText primary={"Dashboard"} />
-                </ListItem>
-                <ListItem component={StyledNavLink} to="/leaveportal">
+                </ListItem> */}
+
+                {/* <ListItem component={StyledNavLink} to="/leaveportal">
                   <ListItemIcon
                     style={{ display: "flex", justifyContent: "center" }}
                   >
                     <School />
                   </ListItemIcon>
                   <ListItemText primary={"leaveportal"} />
-                </ListItem>
+                </ListItem> */}
               </List>
               <List>
                 <ListItem component={StyledNavLink} to="/settings">
@@ -227,12 +242,12 @@ const Header: React.FC<any> = () => {
                 variant="subtitle1"
                 style={{ marginTop: "5px", fontWeight: "bold", color: "white" }}
               >
-                Pranay
+                {user.name}
               </Typography>
             )}
             {!isMobile && !isTablet && (
               <Typography variant="body2" style={{ color: "white" }}>
-                Admin
+                {user.role}
               </Typography>
             )}
           </div>

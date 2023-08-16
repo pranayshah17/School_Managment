@@ -66,7 +66,48 @@ const LeaveManagement: React.FC = () => {
     { field: "endDate", headerName: "End Date", width: 200 },
     { field: "reason", headerName: "Reason", width: 200 },
     { field: "status", headerName: "Status", width: 200 },
+    {
+      field: "actions",
+      headerName: "Actions",
+      width: 200,
+      renderCell: (params) => {
+        const row: LeaveRequest = params.row as LeaveRequest;
+        return (
+          <>
+            {row.status === "Pending" && (
+              <>
+                <button
+                  onClick={() => handleApprove(row.id)}
+                  style={{
+                    marginRight: "8px",
+                    // backgroundColor: "green",
+                    color: "success",
+                  }}
+                >
+                  Approve
+                </button>
+                <button
+                  onClick={() => handleReject(row.id)}
+                  style={{ color: "error" }}
+                >
+                  Reject
+                </button>
+              </>
+            )}
+          </>
+        );
+      },
+    },
   ];
+  const handleApprove = (id: string) => {
+    // Implement your logic to handle approval
+    // You can update the status of the leave request to "Approved"
+  };
+
+  const handleReject = (id: string) => {
+    // Implement your logic to handle rejection
+    // You can update the status of the leave request to "Rejected"
+  };
 
   return (
     <Container
