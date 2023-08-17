@@ -7,6 +7,10 @@ const StyledCard = styled(Card)(({ theme }) => ({
   margin: "auto",
   borderRadius: theme.spacing(2),
   boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
+  transition: "boxShadow 0.3s",
+  "&:hover": {
+    boxShadow: "0 0px 25px rgba(0, 0, 0, 0.2)",
+  },
   backgroundColor: theme.palette.background.paper,
   display: "flex",
   flexDirection: "column",

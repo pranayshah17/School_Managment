@@ -17,8 +17,8 @@ interface Teacher {
 }
 
 const columns: GridColDef[] = [
-  { field: "id", headerName: "Teacher ID", width: 300 },
-  { field: "name", headerName: "Teacher Name", width: 300 },
+  { field: "id", headerName: "Teacher ID", width: 280 },
+  { field: "name", headerName: "Teacher Name", width: 280 },
   { field: "schedule", headerName: "Schedule", width: 300 },
 ];
 
@@ -93,8 +93,10 @@ const MySchedule: React.FC = () => {
     <Container
       sx={{
         width: isMobile ? "90vw" : isTablet ? "60vw" : "60vw",
-        padding: "0px !important",
-        marginBottom: 3,
+        // padding: "0px !important",
+        marginBottom: 0,
+        paddingTop: "10px",
+        marginLeft: 7,
       }}
     >
       <HoverablePaper elevation={3}>

@@ -9,10 +9,6 @@ import {
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 
-interface TeacherFormProps {
-  onSubmit: (data: TeacherFormData) => void;
-}
-
 interface TeacherFormData {
   firstName: string;
   lastName: string;
@@ -22,7 +18,7 @@ interface TeacherFormData {
   mobileNumber: string;
 }
 
-const TeacherForm: React.FC<TeacherFormProps> = ({ onSubmit }) => {
+const TeacherForm: React.FC<any> = ({ onSubmit }) => {
   const {
     handleSubmit,
     control,

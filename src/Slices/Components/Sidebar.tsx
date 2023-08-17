@@ -52,24 +52,40 @@ export const LogoText = styled("p")({
   paddingLeft: "5px",
 });
 
-export const CustomListItemIcon = styled(ListItemIcon)(() => ({
-  justifyContent: "center",
-}));
+// export const CustomListItemIcon = styled(ListItemIcon)(() => ({
+//   justifyContent: "center",
+//   color: "inherit",
+//   "&.active": {
+//     backgroundColor: "black", // Change to your desired active background color
+//     color: "white", // Change to your desired active text color
+//     "& .MuiListItemIcon-root": {
+//       color: "white", // Change to your desired active icon color
+//     },
+//   },
+//   "&:hover": {
+//     backgroundColor: "grey", // Change to your desired hover background color
+//     color: "white", // Change to your desired hover text color
+//     "& .MuiListItemIcon-root": {
+//       color: "inherit", // Change to your desired hover icon color
+//     },
+//   },
+// }));
 export const StyledNavLink = styled(NavLink)(({ theme }) => ({
   textDecoration: "none",
+  // padding: '6px 0px !important',
   color: "inherit",
   "&.active": {
-    backgroundColor: "black", // Change to your desired active background color
-    color: "white", // Change to your desired active text color
+    backgroundColor: "black",
+    color: "white",
     "& .MuiListItemIcon-root": {
-      color: "white", // Change to your desired active icon color
+      color: "inherit",
     },
   },
   "&:hover": {
-    backgroundColor: "grey", // Change to your desired hover background color
-    color: "white", // Change to your desired hover text color
+    backgroundColor: "gray !important",
+    color: "white",
     "& .MuiListItemIcon-root": {
-      color: "inherit", // Change to your desired hover icon color
+      color: "inherit",
     },
   },
 }));
@@ -150,14 +166,6 @@ const Sidebar: React.FC<any> = ({ menuItems }) => {
           </LogoContainer>
         </DrawerHeader>
         <List>
-          {/* <ListItem component={StyledNavLink} to="/profile">
-            <ListItemIcon style={{ display: "flex", justifyContent: "center" }}>
-              <div style={{ display: "flex", justifyContent: "center" }}>
-                <AccountCircleIcon />
-              </div>
-            </ListItemIcon>
-            <ListItemText primary={hideContent ? "" : "Profile"} />
-          </ListItem> */}
           <ListItem component={StyledNavLink} to="/commondashboard">
             <ListItemIcon style={{ display: "flex", justifyContent: "center" }}>
               <DashboardIcon />
@@ -171,36 +179,16 @@ const Sidebar: React.FC<any> = ({ menuItems }) => {
               component={StyledNavLink}
               to={item.route}
             >
-              <CustomListItemIcon>{item.icon}</CustomListItemIcon>
+              <ListItemIcon
+                style={{ display: "flex", justifyContent: "center" }}
+              >
+                {item.icon}
+              </ListItemIcon>
 
               <ListItemText primary={isOpen ? item.text : ""} />
             </ListItem>
           ))}
 
-          {/* <ListItem component={StyledNavLink} to="/leaveportal">
-            <ListItemIcon style={{ display: "flex", justifyContent: "center" }}>
-              <SchoolIcon />
-            </ListItemIcon>
-            <ListItemText primary={hideContent ? "" : "leaveportal"} />
-          </ListItem> */}
-          {/* <ListItem component={StyledNavLink} to="/leavemanagement">
-            <ListItemIcon style={{ display: "flex", justifyContent: "center" }}>
-              <Event /> 
-            </ListItemIcon>
-            <ListItemText primary={hideContent ? "" : "Leave Management"} />
-          </ListItem> */}
-          {/* <ListItem component={StyledNavLink} to="/teacherform">
-            <ListItemIcon style={{ display: "flex", justifyContent: "center" }}>
-              <AddBox />
-            </ListItemIcon>
-            <ListItemText primary={hideContent ? "" : "Add Teacher"} />
-          </ListItem> */}
-          {/* <ListItem component={StyledNavLink} to="/teacherschedules">
-            <ListItemIcon style={{ display: "flex", justifyContent: "center" }}>
-              <EventNoteIcon /> 
-            </ListItemIcon>
-            <ListItemText primary={hideContent ? "" : "Teacher Schedules"} />
-          </ListItem> */}
           <ListItem component={StyledNavLink} to="/settings">
             <ListItemIcon style={{ display: "flex", justifyContent: "center" }}>
               <SettingsIcon />

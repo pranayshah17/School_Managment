@@ -8,13 +8,7 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 
-interface LeaveApplicationFormProps {
-  onSubmit: (leaveDetails: any) => void;
-}
-
-const LeaveApplicationForm: React.FC<LeaveApplicationFormProps> = ({
-  onSubmit,
-}) => {
+const LeaveApplicationForm: React.FC<any> = ({ onSubmit }) => {
   const [leaveType, setLeaveType] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");

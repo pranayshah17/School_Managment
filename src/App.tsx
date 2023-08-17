@@ -1,4 +1,4 @@
-import { AddBox, Event, Schedule } from "@mui/icons-material";
+import { AddBox, Event, Schedule, SchoolOutlined } from "@mui/icons-material";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import { CssBaseline, createTheme } from "@mui/material";
 import { ThemeProvider } from "@mui/system";
@@ -15,6 +15,9 @@ import TeacherForm from "./Slices/Components/Pages/TeacherForm";
 import TeacherSchedules from "./Slices/Components/Pages/TeacherSchedules";
 import Sidebar from "./Slices/Components/Sidebar";
 import AddSchedule from "./Teacher/AddSchedule";
+import LeaveManagementTeacher from "./Teacher/LeaveManagementTeacher";
+import ManageStudent from "./Teacher/ManageStudent";
+import StudentAttendance from "./Teacher/StudentAttendace";
 import LoginPage from "./login_signup/LoginPage";
 import RegistrationForm from "./login_signup/RegistrationForm";
 
@@ -23,15 +26,6 @@ function App() {
 
   const handleToggleSidebar = () => {
     setIsOpen(!isOpen);
-  };
-
-  const handleLeaveSubmit = (leaveDetails: any) => {
-    // Implement your leave submission logic here
-    console.log("Leave submitted:", leaveDetails);
-  };
-  const handleTeacherFormSubmit = (data: any) => {
-    // Implement your teacher form submission logic here
-    console.log("Teacher form submitted:", data);
   };
 
   const user = {
@@ -73,6 +67,26 @@ function App() {
         text: "Add Schedule",
         route: "/addSchedule",
       },
+      {
+        icon: <SchoolOutlined />,
+        text: "Assign Class",
+        route: "/assignclasstostudent",
+      },
+      {
+        icon: <SchoolOutlined />,
+        text: "Manage Student",
+        route: "/managestudent",
+      },
+      {
+        icon: <Event />,
+        text: "Leave Management",
+        route: "/leavemanagementteacher",
+      },
+      {
+        icon: <Event />,
+        text: "student Attendance",
+        route: "/studentattendance",
+      },
     ];
   } else if (user.role === "student") {
     menuItems = [];
@@ -93,16 +107,8 @@ function App() {
                   element={<CommonDashboard role={user.role} />}
                 />
                 <Route path="/profile" element={<Profile />} />
-                <Route
-                  path="/leaveportal"
-                  element={
-                    <LeaveApplicationForm onSubmit={handleLeaveSubmit} />
-                  }
-                />
-                <Route
-                  path="/teacherform"
-                  element={<TeacherForm onSubmit={handleTeacherFormSubmit} />}
-                />
+                <Route path="/leaveportal" element={<LeaveApplicationForm />} />
+                <Route path="/teacherform" element={<TeacherForm />} />
                 <Route path="/leavemanagement" element={<LeaveManagement />} />
                 <Route
                   path="/teacherschedules"
@@ -116,6 +122,16 @@ function App() {
                 />
                 <Route path="/loginpage" element={<LoginPage />} />
                 <Route path="/addschedule" element={<AddSchedule />} />
+                <Route path="/managestudent" element={<ManageStudent />} />
+                <Route
+                  path="/leavemanagementteacher"
+                  element={<LeaveManagementTeacher />}
+                />
+                <Route
+                  path="/studentattendance"
+                  element={<StudentAttendance />}
+                />
+                {/* <Route path="/addstudent" element={<AddStudent />} /> */}
               </Routes>
             </div>
           </div>

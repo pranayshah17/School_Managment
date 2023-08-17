@@ -23,7 +23,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import { styled } from "@mui/system";
+import { Box, styled } from "@mui/system";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../Store/Store";
@@ -88,6 +88,13 @@ const Header: React.FC<any> = ({ menuItems, user }) => {
     display: "flex",
     flexGrow: 1,
   };
+  const CustomDrawer = styled(Drawer)(({ theme }) => ({
+    width: "400px", // Set the desired width here
+    [theme.breakpoints.up("md")]: {
+      // Adjust the width for larger screens if needed
+      width: "400px",
+    },
+  }));
   const CustomListItemIcon = styled(ListItemIcon)(() => ({
     justifyContent: "center",
   }));
@@ -150,26 +157,6 @@ const Header: React.FC<any> = ({ menuItems, user }) => {
                     <ListItemText primary={isOpen ? item.text : ""} />
                   </ListItem>
                 ))}
-
-                {/* <ListItem component={StyledNavLink} to="/profile">
-                  <ListItemIcon
-                    style={{ display: "flex", justifyContent: "center" }}
-                  >
-                    <div style={{ display: "flex", justifyContent: "center" }}>
-                      <AccountCircle />
-                    </div>
-                  </ListItemIcon>
-                  <ListItemText primary={"Profile"} />
-                </ListItem> */}
-
-                {/* <ListItem component={StyledNavLink} to="/leaveportal">
-                  <ListItemIcon
-                    style={{ display: "flex", justifyContent: "center" }}
-                  >
-                    <School />
-                  </ListItemIcon>
-                  <ListItemText primary={"leaveportal"} />
-                </ListItem> */}
               </List>
               <List>
                 <ListItem component={StyledNavLink} to="/settings">
@@ -232,11 +219,16 @@ const Header: React.FC<any> = ({ menuItems, user }) => {
               flexDirection: "column",
               alignItems: "center",
               paddingTop: "6px",
+              cursor: "pointer",
             }}
+            onClick={() => setDrawerOpen(true)}
           >
             <Avatar alt="User Profile" src="/path_to_avatar_image.jpg" />
           </div>
-          <div>
+          <div
+            onClick={() => setDrawerOpen(true)}
+            style={{ cursor: "pointer" }}
+          >
             {!isMobile && !isTablet && (
               <Typography
                 variant="subtitle1"
@@ -253,6 +245,29 @@ const Header: React.FC<any> = ({ menuItems, user }) => {
           </div>
         </div>
       </Toolbar>
+      <CustomDrawer
+        anchor="right"
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        // style={{ width: "500px" }}
+      >
+        <Box style={{ padding: "16px", width: "300px" }}>
+          <Avatar
+            alt="User Profile"
+            src="/path_to_avatar_image.jpg"
+            style={{ width: "100px", height: "100px", margin: "0 auto" }}
+          />
+          <Typography
+            variant="h6"
+            style={{ marginTop: "10px", textAlign: "center" }}
+          >
+            {user.name}
+          </Typography>
+          <Typography variant="body2" style={{ textAlign: "center" }}>
+            {user.role}
+          </Typography>
+        </Box>
+      </CustomDrawer>
     </AppBar>
   );
 };
