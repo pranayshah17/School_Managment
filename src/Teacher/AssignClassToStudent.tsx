@@ -66,7 +66,7 @@ const AssignClassToStudent: React.FC = () => {
   };
 
   return (
-    <Container sx={{ paddingTop: "50px" }}>
+    <Container sx={{ marginTop: "30px" }} component="main" maxWidth="xs">
       <FormContainer elevation={3}>
         <Typography variant="h6" align="center" gutterBottom>
           Assign Class to Student

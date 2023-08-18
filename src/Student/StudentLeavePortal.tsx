@@ -48,7 +48,7 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
   marginLeft: theme.spacing(1),
 }));
 
-const LeaveManagementTeacher: React.FC = () => {
+const StudentLeavePortal: React.FC = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [reason, setReason] = useState("");
@@ -187,4 +187,4 @@ const LeaveManagementTeacher: React.FC = () => {
   );
 };
 
-export default LeaveManagementTeacher;
+export default StudentLeavePortal;

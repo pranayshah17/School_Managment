@@ -1,20 +1,27 @@
-import { AddBox, Event, Schedule, SchoolOutlined } from "@mui/icons-material";
+import {
+  AddBox,
+  Event,
+  Schedule,
+  SchoolOutlined,
+  Settings,
+} from "@mui/icons-material";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import { CssBaseline, createTheme } from "@mui/material";
 import { ThemeProvider } from "@mui/system";
-import { useState } from "react";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import React, { useState } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import CommonDashboard from "./CommonDashboard";
 import Header from "./Slices/Components/HeaderComponent";
 import LeaveManagement from "./Slices/Components/Pages/LeaveManagment";
 import LeaveApplicationForm from "./Slices/Components/Pages/LeavePortal";
 import LogOut from "./Slices/Components/Pages/LogOut";
 import Profile from "./Slices/Components/Pages/Profile";
-import Settings from "./Slices/Components/Pages/Settings";
 import TeacherForm from "./Slices/Components/Pages/TeacherForm";
 import TeacherSchedules from "./Slices/Components/Pages/TeacherSchedules";
 import Sidebar from "./Slices/Components/Sidebar";
+import StudentLeavePortal from "./Student/StudentLeavePortal";
 import AddSchedule from "./Teacher/AddSchedule";
+import AssignClassToStudent from "./Teacher/AssignClassToStudent";
 import LeaveManagementTeacher from "./Teacher/LeaveManagementTeacher";
 import ManageStudent from "./Teacher/ManageStudent";
 import StudentAttendance from "./Teacher/StudentAttendace";
@@ -23,6 +30,17 @@ import RegistrationForm from "./login_signup/RegistrationForm";
 
 function App() {
   const [isOpen, setIsOpen] = useState(false);
+  const [userinfo, setUserinfo] = useState(null); // Change to initial user state
+
+  const handleLogin = (userData: any) => {
+    // Simulating a login action, you can replace this with actual authentication logic
+    setUserinfo(userData);
+  };
+
+  const handleLogout = () => {
+    // Simulating a logout action
+    setUserinfo(null);
+  };
 
   const handleToggleSidebar = () => {
     setIsOpen(!isOpen);
@@ -30,7 +48,7 @@ function App() {
 
   const user = {
     name: "John Doe",
-    role: "teacher",
+    role: "principal",
     avatarUrl: "userlogo.jpg", // Replace with actual avatar URL
   };
 
@@ -79,7 +97,7 @@ function App() {
       },
       {
         icon: <Event />,
-        text: "Leave Management",
+        text: "Leave Portal",
         route: "/leavemanagementteacher",
       },
       {
@@ -89,7 +107,13 @@ function App() {
       },
     ];
   } else if (user.role === "student") {
-    menuItems = [];
+    menuItems = [
+      {
+        icon: <Event />,
+        text: "Leave Portal",
+        route: "/StudentLeavePortal",
+      },
+    ];
   }
   return (
     <BrowserRouter>
@@ -101,7 +125,7 @@ function App() {
             <Header user={user} menuItems={menuItems} />
             <div>
               <Routes>
-                <Route path="/" element={<Navigate to="/loginpage" />} />
+                {/* <Route path="/" element={<Navigate to="/loginpage" />} /> */}
                 <Route
                   path="/commondashboard"
                   element={<CommonDashboard role={user.role} />}
@@ -110,6 +134,10 @@ function App() {
                 <Route path="/leaveportal" element={<LeaveApplicationForm />} />
                 <Route path="/teacherform" element={<TeacherForm />} />
                 <Route path="/leavemanagement" element={<LeaveManagement />} />
+                <Route
+                  path="/assignclasstostudent"
+                  element={<AssignClassToStudent />}
+                />
                 <Route
                   path="/teacherschedules"
                   element={<TeacherSchedules />}
@@ -123,6 +151,10 @@ function App() {
                 <Route path="/loginpage" element={<LoginPage />} />
                 <Route path="/addschedule" element={<AddSchedule />} />
                 <Route path="/managestudent" element={<ManageStudent />} />
+                <Route
+                  path="/StudentLeavePortal"
+                  element={<StudentLeavePortal />}
+                />
                 <Route
                   path="/leavemanagementteacher"
                   element={<LeaveManagementTeacher />}

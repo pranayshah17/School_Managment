@@ -3,8 +3,6 @@ import {
   ExitToApp,
   Mail,
   Menu,
-  Notifications,
-  Search as SearchIcon,
   Settings,
 } from "@mui/icons-material";
 import {
@@ -13,7 +11,6 @@ import {
   Badge,
   Drawer,
   IconButton,
-  InputBase,
   List,
   ListItem,
   ListItemIcon,
@@ -58,8 +55,8 @@ const Header: React.FC<any> = ({ menuItems, user }) => {
     position: "relative",
     borderRadius: "4px",
     backgroundColor: "#eee",
-    marginLeft: "200px",
-    width: "40%",
+    justifyContent: "flex-end",
+    width: "25%",
     height: "40px",
   };
   const searchIconStyles: React.CSSProperties = {
@@ -87,6 +84,7 @@ const Header: React.FC<any> = ({ menuItems, user }) => {
     zIndex: 1,
     display: "flex",
     flexGrow: 1,
+    justifyContent: "flex-end ",
   };
   const CustomDrawer = styled(Drawer)(({ theme }) => ({
     width: "400px", // Set the desired width here
@@ -184,27 +182,23 @@ const Header: React.FC<any> = ({ menuItems, user }) => {
             Dashboard
           </Typography>
         )}
-        <div style={searchContainerStyles}>
-          <div style={searchIconStyles}>
-            <SearchIcon />
+        {/* <div style={{ flexGrow: 1 }} />
+        {!isMobile && (
+          <div style={searchContainerStyles}>
+            <div style={searchIconStyles}>
+              <SearchIcon />
+            </div>
+            <InputBase
+              placeholder="Search…"
+              value={searchQuery}
+              onChange={handleSearch}
+              style={inputStyles}
+              inputProps={{ "aria-label": "search" }}
+            />
           </div>
-          <InputBase
-            placeholder="Search…"
-            value={searchQuery}
-            onChange={handleSearch}
-            style={inputStyles}
-            inputProps={{ "aria-label": "search" }}
-          />
-        </div>
+        )} */}
         <div style={{ flexGrow: 1 }} />
         <div style={iconsContainerStyles}>
-          {!isMobile && !isTablet && (
-            <IconButton color="inherit" onClick={handleIncrementNotifications}>
-              <Badge badgeContent={notificationsCount} color="error">
-                <Notifications />
-              </Badge>
-            </IconButton>
-          )}
           {!isMobile && !isTablet && (
             <IconButton color="inherit">
               <Badge badgeContent={3} color="error">

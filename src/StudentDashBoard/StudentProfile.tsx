@@ -4,15 +4,17 @@ import { Container } from "@mui/system";
 import React from "react";
 
 const StyledCard = styled(Card)(({ theme }) => ({
-  maxWidth: 400,
-  margin: "auto",
+  // maxWidth: 400,
+  // margin: "auto",
+  // maxHeight: 500,
+  // marginLeft: "50px",
   borderRadius: theme.spacing(2),
   boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
   transition: "boxShadow 0.3s",
   "&:hover": {
     boxShadow: "0 0px 25px rgba(0, 0, 0, 0.2)",
   },
-  backgroundColor: theme.palette.background.paper,
+  backgroundColor: "#f4f4f4",
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
@@ -26,21 +28,21 @@ const StyledAvatar = styled(Avatar)(({ theme }) => ({
   border: `4px solid ${theme.palette.primary.main}`,
 }));
 
-const TeacherProfile: React.FC = () => {
-  const teacherName = "John Doe";
-  const subject = "Mathematics";
-  const teacherPhotoUrl = "https://via.placeholder.com/150"; // Placeholder image URL
+const StudentProfile: React.FC = () => {
+  const studentName = "Jane Smith";
+  const grade = "Grade 10";
+  const studentPhotoUrl = "https://via.placeholder.com/150"; // Placeholder image URL
 
   return (
     <Container>
       <StyledCard>
-        <StyledAvatar alt={teacherName} src={teacherPhotoUrl} />
+        <StyledAvatar alt={studentName} src={studentPhotoUrl} />
         <CardContent>
           <Typography variant="h5" gutterBottom>
-            {teacherName}
+            {studentName}
           </Typography>
           <Typography variant="subtitle1" color="textSecondary">
-            {subject}
+            {grade}
           </Typography>
           <Typography variant="body2">
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla nec
@@ -53,4 +55,4 @@ const TeacherProfile: React.FC = () => {
   );
 };
 
-export default TeacherProfile;
+export default StudentProfile;

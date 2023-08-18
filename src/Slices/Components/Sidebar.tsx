@@ -52,24 +52,6 @@ export const LogoText = styled("p")({
   paddingLeft: "5px",
 });
 
-// export const CustomListItemIcon = styled(ListItemIcon)(() => ({
-//   justifyContent: "center",
-//   color: "inherit",
-//   "&.active": {
-//     backgroundColor: "black", // Change to your desired active background color
-//     color: "white", // Change to your desired active text color
-//     "& .MuiListItemIcon-root": {
-//       color: "white", // Change to your desired active icon color
-//     },
-//   },
-//   "&:hover": {
-//     backgroundColor: "grey", // Change to your desired hover background color
-//     color: "white", // Change to your desired hover text color
-//     "& .MuiListItemIcon-root": {
-//       color: "inherit", // Change to your desired hover icon color
-//     },
-//   },
-// }));
 export const StyledNavLink = styled(NavLink)(({ theme }) => ({
   textDecoration: "none",
   // padding: '6px 0px !important',
@@ -201,12 +183,12 @@ const Sidebar: React.FC<any> = ({ menuItems }) => {
             </ListItemIcon>
             <ListItemText primary={hideContent ? "" : "Logout"} />
           </ListItem>
-          <ListItem component={StyledNavLink} to="/loginpage">
+          {/* <ListItem component={StyledNavLink} to="/loginpage">
             <ListItemIcon style={{ display: "flex", justifyContent: "center" }}>
               <ExitToAppIcon />
             </ListItemIcon>
             <ListItemText primary={hideContent ? "" : "Login"} />
-          </ListItem>
+          </ListItem> */}
         </List>
       </StyledDrawer>
     </ThemeProvider>

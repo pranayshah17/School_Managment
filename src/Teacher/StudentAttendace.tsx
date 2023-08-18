@@ -1,3 +1,4 @@
+import EditIcon from "@mui/icons-material/Edit";
 import {
   Button,
   Checkbox,
@@ -5,6 +6,7 @@ import {
   FormControl,
   FormControlLabel,
   Grid,
+  IconButton,
   Paper,
   Typography,
 } from "@mui/material";
@@ -146,13 +148,12 @@ const StudentAttendance: React.FC<any> = () => {
                     label="Absent"
                   />
                 ) : (
-                  <Button
-                    variant="contained"
-                    color={editMode[student] ? "primary" : "info"}
+                  <IconButton
+                    color={editMode[student] ? "primary" : "default"}
                     onClick={handleEditModeToggle(student)}
                   >
-                    {editMode[student] ? "Save" : "Edit"}
-                  </Button>
+                    <EditIcon />
+                  </IconButton>
                 )}
                 {editMode[student] && (
                   <Button

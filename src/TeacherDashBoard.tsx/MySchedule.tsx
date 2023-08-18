@@ -71,7 +71,7 @@ const ScrollableDiv = styled("div")({
 
 const HoverablePaper = styled(Paper)({
   padding: 10,
-  width: "100%",
+  width: "95%",
   transition: "boxShadow 0.3s",
   "&:hover": {
     boxShadow: "0 0px 25px rgba(0, 0, 0, 0.2)",
@@ -96,7 +96,7 @@ const MySchedule: React.FC = () => {
         // padding: "0px !important",
         marginBottom: 0,
         paddingTop: "10px",
-        marginLeft: 7,
+        marginLeft: isMobile ? 0 : isTablet ? 0 : 7,
       }}
     >
       <HoverablePaper elevation={3}>
