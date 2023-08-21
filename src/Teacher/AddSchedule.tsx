@@ -7,30 +7,31 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import { Box, styled } from "@mui/system";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import React from "react";
+import * as Yup from "yup";
 
 interface ScheduleDetails {
   className: string;
   time: string;
   date: string;
 }
+// Validation schema using Yup
+const validationSchema = Yup.object().shape({
+  className: Yup.string().required("Class Name is required"),
+  time: Yup.string().required("Time is required"),
+  date: Yup.string().required("Date is required"),
+});
 
+const ErrorText = styled(Box)(({ theme }) => ({
+  color: "red",
+  marginTop: theme.spacing(1),
+}));
+// Component definition
 const AddSchedule: React.FC<any> = () => {
-  const [className, setClassName] = useState("");
-  const [time, setTime] = useState("");
-  const [date, setDate] = useState("");
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const scheduleDetails: ScheduleDetails = {
-      className,
-      time,
-      date,
-    };
-    // onSubmit(scheduleDetails);
-    setClassName("");
-    setTime("");
-    setDate("");
+  const handleSubmit = (values: ScheduleDetails) => {
+    console.log(values);
   };
 
   return (
@@ -45,53 +46,75 @@ const AddSchedule: React.FC<any> = () => {
           >
             Add Schedule
           </Typography>
-          <form onSubmit={handleSubmit}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  label="Class Name"
-                  value={className}
-                  onChange={(e) => setClassName(e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  type="Time"
-                  label="Time"
-                  value={time}
-                  onChange={(e) => setTime(e.target.value)}
-                  InputLabelProps={{ shrink: true }}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  variant="outlined"
-                  required
-                  fullWidth
-                  type="date"
-                  label="Date"
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                  InputLabelProps={{ shrink: true }}
-                />
-              </Grid>
-            </Grid>
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              color="primary"
-              style={{ marginTop: "16px" }}
-            >
-              Add Schedule
-            </Button>
-          </form>
+          <Formik
+            initialValues={{
+              className: "",
+              time: "",
+              date: "",
+            }}
+            validationSchema={validationSchema}
+            onSubmit={handleSubmit}
+          >
+            {({ isSubmitting }) => (
+              <Form>
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    <Field
+                      as={TextField}
+                      variant="outlined"
+                      // required
+                      fullWidth
+                      label="Class Name"
+                      name="className"
+                    />
+                    <ErrorMessage name="className">
+                      {(msg) => <ErrorText>{msg}</ErrorText>}
+                    </ErrorMessage>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Field
+                      as={TextField}
+                      variant="outlined"
+                      // required
+                      fullWidth
+                      type="time"
+                      label="Time"
+                      name="time"
+                      InputLabelProps={{ shrink: true }}
+                    />
+                    <ErrorMessage name="time">
+                      {(msg) => <ErrorText>{msg}</ErrorText>}
+                    </ErrorMessage>
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Field
+                      as={TextField}
+                      variant="outlined"
+                      // required
+                      fullWidth
+                      type="date"
+                      label="Date"
+                      name="date"
+                      InputLabelProps={{ shrink: true }}
+                    />
+                    <ErrorMessage name="date">
+                      {(msg) => <ErrorText>{msg}</ErrorText>}
+                    </ErrorMessage>
+                  </Grid>
+                </Grid>
+                <Button
+                  type="submit"
+                  // fullWidth
+                  variant="contained"
+                  color="primary"
+                  style={{ marginTop: "16px" }}
+                  disabled={isSubmitting}
+                >
+                  Add Schedule
+                </Button>
+              </Form>
+            )}
+          </Formik>
         </div>
       </Paper>
     </Container>

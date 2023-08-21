@@ -1,8 +1,9 @@
-// src/store.ts
+// src/Store/Store.ts
+
 import { Action, ThunkAction, configureStore } from "@reduxjs/toolkit";
-import authSlice from "../PrivateRoute/authSlice";
 import HeaderSlice from "../Slices/HeaderSlice";
 import SlidebarSlices from "../Slices/SlidebarSlices";
+import authSlice from "../login_signup/authSlice";
 
 const store = configureStore({
   reducer: {

@@ -48,7 +48,7 @@ function App() {
 
   const user = {
     name: "John Doe",
-    role: "principal",
+    role: "student",
     avatarUrl: "userlogo.jpg", // Replace with actual avatar URL
   };
 

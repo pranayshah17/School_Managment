@@ -6,8 +6,10 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { Box, styled } from "@mui/system";
+import { ErrorMessage, Field, Form, Formik } from "formik";
 import React from "react";
-import { Controller, useForm } from "react-hook-form";
+import * as Yup from "yup";
 
 interface TeacherFormData {
   firstName: string;
@@ -18,15 +20,35 @@ interface TeacherFormData {
   mobileNumber: string;
 }
 
-const TeacherForm: React.FC<any> = ({ onSubmit }) => {
-  const {
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm<TeacherFormData>();
+const validationSchema = Yup.object().shape({
+  firstName: Yup.string().required("First Name is required"),
+  lastName: Yup.string().required("Last Name is required"),
+  username: Yup.string().required("Username is required"),
+  email: Yup.string()
+    .email("Invalid email address")
+    .required("Email is required"),
+  password: Yup.string().required("Password is required"),
+  mobileNumber: Yup.string()
+    .matches(/^[0-9]{10}$/, "Invalid mobile number")
+    .required("Mobile Number is required"),
+});
 
-  const handleFormSubmit = (data: TeacherFormData) => {
-    onSubmit(data);
+const ErrorText = styled(Box)(({ theme }) => ({
+  color: "red",
+  marginTop: theme.spacing(1),
+}));
+const TeacherForm: React.FC<any> = ({ onSubmit }) => {
+  const initialValues: TeacherFormData = {
+    firstName: "",
+    lastName: "",
+    username: "",
+    email: "",
+    password: "",
+    mobileNumber: "",
+  };
+
+  const handleFormSubmit = (values: TeacherFormData) => {
+    onSubmit(values);
   };
 
   return (
@@ -35,134 +57,97 @@ const TeacherForm: React.FC<any> = ({ onSubmit }) => {
         <Typography variant="h5" align="center" sx={{ paddingBottom: "20px" }}>
           Add Teacher
         </Typography>
-        <form onSubmit={handleSubmit(handleFormSubmit)}>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <Controller
-                name="firstName"
-                control={control}
-                defaultValue=""
-                rules={{ required: "First Name is required" }}
-                render={({ field }: { field: any }) => (
-                  <TextField
-                    {...field}
-                    label="First Name"
-                    fullWidth
-                    error={!!errors.firstName}
-                    helperText={errors.firstName?.message}
-                  />
-                )}
-              />
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleFormSubmit}
+        >
+          <Form>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <Field
+                  type="text"
+                  name="firstName"
+                  label="First Name"
+                  fullWidth
+                  as={TextField}
+                />
+                <ErrorMessage name="firstName">
+                  {(msg) => <ErrorText>{msg}</ErrorText>}
+                </ErrorMessage>
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <Field
+                  type="text"
+                  name="lastName"
+                  label="Last Name"
+                  fullWidth
+                  as={TextField}
+                />
+                <ErrorMessage name="lastName">
+                  {(msg) => <ErrorText>{msg}</ErrorText>}
+                </ErrorMessage>
+              </Grid>
+              <Grid item xs={12}>
+                <Field
+                  type="text"
+                  name="username"
+                  label="Username"
+                  fullWidth
+                  as={TextField}
+                />
+                <ErrorMessage name="username">
+                  {(msg) => <ErrorText>{msg}</ErrorText>}
+                </ErrorMessage>
+              </Grid>
+              <Grid item xs={12}>
+                <Field
+                  type="email"
+                  name="email"
+                  label="Email"
+                  fullWidth
+                  as={TextField}
+                />
+                <ErrorMessage name="email">
+                  {(msg) => <ErrorText>{msg}</ErrorText>}
+                </ErrorMessage>
+              </Grid>
+              <Grid item xs={12}>
+                <Field
+                  type="password"
+                  name="password"
+                  label="Password"
+                  fullWidth
+                  as={TextField}
+                />
+                <ErrorMessage name="password">
+                  {(msg) => <ErrorText>{msg}</ErrorText>}
+                </ErrorMessage>
+              </Grid>
+              <Grid item xs={12}>
+                <Field
+                  type="text"
+                  name="mobileNumber"
+                  label="Mobile Number"
+                  fullWidth
+                  as={TextField}
+                />
+                <ErrorMessage name="mobileNumber">
+                  {(msg) => <ErrorText>{msg}</ErrorText>}
+                </ErrorMessage>
+              </Grid>
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <Controller
-                name="lastName"
-                control={control}
-                defaultValue=""
-                rules={{ required: "Last Name is required" }}
-                render={({ field }: { field: any }) => (
-                  <TextField
-                    {...field}
-                    label="Last Name"
-                    fullWidth
-                    error={!!errors.lastName}
-                    helperText={errors.lastName?.message}
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Controller
-                name="username"
-                control={control}
-                defaultValue=""
-                rules={{ required: "Username is required" }}
-                render={({ field }: { field: any }) => (
-                  <TextField
-                    {...field}
-                    label="Username"
-                    fullWidth
-                    error={!!errors.username}
-                    helperText={errors.username?.message}
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Controller
-                name="email"
-                control={control}
-                defaultValue=""
-                rules={{
-                  required: "Email is required",
-                  pattern: {
-                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                    message: "Invalid email address",
-                  },
-                }}
-                render={({ field }: { field: any }) => (
-                  <TextField
-                    {...field}
-                    label="Email"
-                    fullWidth
-                    error={!!errors.email}
-                    helperText={errors.email?.message}
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Controller
-                name="password"
-                control={control}
-                defaultValue=""
-                rules={{ required: "Password is required" }}
-                render={({ field }: { field: any }) => (
-                  <TextField
-                    {...field}
-                    label="Password"
-                    type="password"
-                    fullWidth
-                    error={!!errors.password}
-                    helperText={errors.password?.message}
-                  />
-                )}
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Controller
-                name="mobileNumber"
-                control={control}
-                defaultValue=""
-                rules={{
-                  required: "Mobile Number is required",
-                  pattern: {
-                    value: /^[0-9]{10}$/,
-                    message: "Invalid mobile number",
-                  },
-                }}
-                render={({ field }: { field: any }) => (
-                  <TextField
-                    {...field}
-                    label="Mobile Number"
-                    fullWidth
-                    error={!!errors.mobileNumber}
-                    helperText={errors.mobileNumber?.message}
-                  />
-                )}
-              />
-            </Grid>
-          </Grid>
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            fullWidth
-            style={{ marginTop: "18px" }}
-          >
-            Add Teacher
-          </Button>
-        </form>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+              style={{ marginTop: "18px" }}
+            >
+              Add Teacher
+            </Button>
+          </Form>
+        </Formik>
       </Paper>
     </Container>
   );

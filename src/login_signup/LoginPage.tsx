@@ -10,9 +10,14 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { styled } from "@mui/system";
+import { Box, styled } from "@mui/system";
+import { ErrorMessage, Field, Form, Formik } from "formik"; // Import Formik components
 import { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { NavLink, useNavigate } from "react-router-dom";
+import * as Yup from "yup"; // Import Yup for validation
+import { RootState } from "../Store/Store";
+import { login } from "./AuthActions";
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   display: "flex",
@@ -26,35 +31,46 @@ const StyledAvatar = styled(Avatar)(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
 }));
 
-const StyledForm = styled("form")(({ theme }) => ({
-  width: "100%",
-  marginTop: theme.spacing(1),
-}));
-
 const StyledSubmitButton = styled(Button)(({ theme }) => ({
   margin: theme.spacing(3, 0, 2),
 }));
 
-// if person is registered navigate to login page
+const ErrorText = styled(Box)(({ theme }) => ({
+  color: "red",
+  marginTop: theme.spacing(1),
+}));
 
-const LoginPage = () => {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+// Define validation schema using Yup
+const validationSchema = Yup.object().shape({
+  email: Yup.string()
+    .email("Invalid email address")
+    .required("Email is required"),
+  password: Yup.string()
+    // .min(6, "Password must be at least 6 characters")
+    .required("Password is required"),
+});
 
-  const handleChange = (event: any) => {
-    const { name, value } = event.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
+const LoginPage: React.FC = () => {
+  const dispatch = useDispatch<any>();
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  );
 
-  const handleSubmit = (event: any) => {
-    event.preventDefault();
-    // Here you can handle the login submission
-    console.log(formData);
+  const navigate = useNavigate();
+  const [loginSuccess, setLoginSuccess] = useState(false);
+  const [loginError, setLoginError] = useState("");
+
+  const handleSubmit = async (values: any) => {
+    try {
+      const response = await dispatch(login(values.email, values.password));
+      if (response.success) {
+        setLoginSuccess(true);
+      } else {
+        setLoginError(response.message);
+      }
+    } catch (error) {
+      console.error("Error during login:", error);
+    }
   };
 
   return (
@@ -67,51 +83,77 @@ const LoginPage = () => {
         <Typography component="h1" variant="h5">
           Log in
         </Typography>
-        <StyledForm onSubmit={handleSubmit}>
-          <TextField
-            label="Email Address"
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="email"
-            autoComplete="email"
-            value={formData.email}
-            onChange={handleChange}
-          />
-          <TextField
-            label="Password"
-            variant="outlined"
-            margin="normal"
-            required
-            fullWidth
-            name="password"
-            type="password"
-            autoComplete="current-password"
-            value={formData.password}
-            onChange={handleChange}
-          />
-          <Grid container>
-            <Grid item xs>
-              <Link href="#" variant="body2">
-                Forgot password?
-              </Link>
-            </Grid>
-            <Grid item>
-              <Link component={NavLink} to="/registrationpage" variant="body2">
-                {"Don't have an account? Sign Up"}
-              </Link>
-            </Grid>
-          </Grid>
-          <StyledSubmitButton
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-          >
-            Log In
-          </StyledSubmitButton>
-        </StyledForm>
+        {/* Formik wraps your form */}
+        <Formik
+          initialValues={{
+            email: "",
+            password: "",
+          }}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+        >
+          {({ isSubmitting }) => (
+            <Form>
+              {/* Form fields */}
+              <Field
+                type="email"
+                name="email"
+                label="Email Address"
+                variant="outlined"
+                margin="normal"
+                // required
+                fullWidth
+                as={TextField} // Use TextField as the input component
+              />
+              <ErrorMessage name="email">
+                {(msg) => <ErrorText>{msg}</ErrorText>}
+              </ErrorMessage>
+
+              <Field
+                type="password"
+                name="password"
+                label="Password"
+                variant="outlined"
+                margin="normal"
+                fullWidth
+                as={TextField}
+              />
+              <ErrorMessage name="password">
+                {(msg) => <ErrorText>{msg}</ErrorText>}
+              </ErrorMessage>
+
+              {/* Forgot password and Sign Up links */}
+              <Grid container>
+                <Grid item xs>
+                  <Link href="#" variant="body2">
+                    Forgot password?
+                  </Link>
+                </Grid>
+                <Grid item>
+                  <Link
+                    component={NavLink}
+                    to="/registrationpage"
+                    variant="body2"
+                  >
+                    {"Don't have an account? Sign Up"}
+                  </Link>
+                </Grid>
+              </Grid>
+
+              {/* Submit button */}
+              <StyledSubmitButton
+                type="submit"
+                fullWidth
+                variant="contained"
+                color="primary"
+                // disabled={isSubmitting}
+              >
+                Log In
+              </StyledSubmitButton>
+            </Form>
+          )}
+        </Formik>
+        {loginError && <ErrorText>{loginError}</ErrorText>}
       </StyledPaper>
     </Container>
   );
