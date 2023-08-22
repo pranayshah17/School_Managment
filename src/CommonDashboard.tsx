@@ -6,9 +6,9 @@ import TeacherDasboard from "./TeacherDashBoard.tsx/TeacherDasboard";
 const CommonDashboard: React.FC<{ role: string }> = ({ role }) => {
   return (
     <div>
-      {role === "principal" && <PrincipalDashboardPage />}
-      {role === "teacher" && <TeacherDasboard />}
-      {role === "student" && <StudentDashBoard />}
+      {role === "Principal" && <PrincipalDashboardPage />}
+      {role === "Teacher" && <TeacherDasboard />}
+      {role === "Student" && <StudentDashBoard />}
     </div>
   );
 };

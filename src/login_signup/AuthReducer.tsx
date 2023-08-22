@@ -3,11 +3,13 @@
 interface AuthState {
   isAuthenticated: boolean;
   user: { email: string } | null;
+  token: string | null;
 }
 
 const initialState: AuthState = {
   isAuthenticated: false,
   user: null,
+  token: null,
 };
 
 const authReducer = (state = initialState, action: any): AuthState => {
@@ -17,6 +19,7 @@ const authReducer = (state = initialState, action: any): AuthState => {
         ...state,
         isAuthenticated: true,
         user: action.payload,
+        token: action.payload.token,
       };
     default:
       return state;

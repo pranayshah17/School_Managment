@@ -1,21 +1,17 @@
-import {
-  AddBox,
-  Event,
-  Schedule,
-  SchoolOutlined,
-  Settings,
-} from "@mui/icons-material";
+import { AddBox, Event, Schedule, SchoolOutlined } from "@mui/icons-material";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import { CssBaseline, createTheme } from "@mui/material";
 import { ThemeProvider } from "@mui/system";
 import React, { useState } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import CommonDashboard from "./CommonDashboard";
+import PrivateRoute from "./PrivateRoute/PrivateRoute";
 import Header from "./Slices/Components/HeaderComponent";
 import LeaveManagement from "./Slices/Components/Pages/LeaveManagment";
 import LeaveApplicationForm from "./Slices/Components/Pages/LeavePortal";
 import LogOut from "./Slices/Components/Pages/LogOut";
-import Profile from "./Slices/Components/Pages/Profile";
+import SettingsPage from "./Slices/Components/Pages/Settings";
 import TeacherForm from "./Slices/Components/Pages/TeacherForm";
 import TeacherSchedules from "./Slices/Components/Pages/TeacherSchedules";
 import Sidebar from "./Slices/Components/Sidebar";
@@ -32,26 +28,42 @@ function App() {
   const [isOpen, setIsOpen] = useState(false);
   const [userinfo, setUserinfo] = useState(null); // Change to initial user state
 
+  const location = useLocation();
+
+  const isLoginPage = location.pathname.startsWith("/login");
+  const isRegistrationPage = location.pathname.startsWith("/registrationpage");
+
   const handleLogin = (userData: any) => {
-    // Simulating a login action, you can replace this with actual authentication logic
     setUserinfo(userData);
   };
 
   const handleLogout = () => {
-    // Simulating a logout action
-    setUserinfo(null);
+    const confirmLogout = window.confirm("Are you sure you want to logout?");
+    if (confirmLogout) {
+      localStorage.removeItem("authToken"); // Remove token from localStorage
+      setUserinfo(null); // Clear user info
+      // navigate("/loginpage"); // Navigate to login page
+    }
   };
 
   const handleToggleSidebar = () => {
     setIsOpen(!isOpen);
   };
 
+  const { role } = useSelector((state: any) => state.auth);
+
   const user = {
     name: "John Doe",
-    role: "student",
+    role: role,
     avatarUrl: "userlogo.jpg", // Replace with actual avatar URL
   };
 
+  // const isLoggedIn = !!userinfo;
+
+  // If not logged in, show the login page
+  // if (!isLoggedIn) {
+  //   return <LoginPage handleLogin={handleLogin} />;
+  // }
   interface MenuItem {
     icon: React.ReactNode;
     text: string;
@@ -60,7 +72,7 @@ function App() {
   const theme = createTheme();
   let menuItems: MenuItem[] = [];
 
-  if (user.role === "principal") {
+  if (user.role === "Principal") {
     menuItems = [
       {
         icon: <Event />,
@@ -78,7 +90,7 @@ function App() {
         route: "/teacherschedules",
       },
     ];
-  } else if (user.role === "teacher") {
+  } else if (user.role === "Teacher") {
     menuItems = [
       {
         icon: <Schedule />,
@@ -106,7 +118,7 @@ function App() {
         route: "/studentattendance",
       },
     ];
-  } else if (user.role === "student") {
+  } else if (user.role === "Student") {
     menuItems = [
       {
         icon: <Event />,
@@ -115,56 +127,132 @@ function App() {
       },
     ];
   }
+
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>
         <div className="App" style={{ display: "flex" }}>
           <CssBaseline />
-          <Sidebar menuItems={menuItems} />
+          {!isLoginPage && !isRegistrationPage && (
+            <>
+              <Sidebar menuItems={menuItems} />
+            </>
+          )}
           <div style={{ flex: 1 }}>
             <Header user={user} menuItems={menuItems} />
             <div>
+              {/* <Layout user={user} menuItems={menuItems}> */}
               <Routes>
-                {/* <Route path="/" element={<Navigate to="/loginpage" />} /> */}
                 <Route
-                  path="/commondashboard"
-                  element={<CommonDashboard role={user.role} />}
+                  path="/commondashboard/*"
+                  element={
+                    <PrivateRoute>
+                      <CommonDashboard role={user.role} />
+                    </PrivateRoute>
+                  }
                 />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/leaveportal" element={<LeaveApplicationForm />} />
-                <Route path="/teacherform" element={<TeacherForm />} />
-                <Route path="/leavemanagement" element={<LeaveManagement />} />
                 <Route
-                  path="/assignclasstostudent"
+                  path="/leaveportal/*"
+                  element={
+                    <PrivateRoute>
+                      <LeaveApplicationForm />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/teacherform/*"
+                  element={
+                    <PrivateRoute>
+                      <TeacherForm />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/leavemanagement/*"
+                  element={
+                    <PrivateRoute>
+                      <LeaveManagement />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/assignclasstostudent/*"
                   element={<AssignClassToStudent />}
                 />
                 <Route
-                  path="/teacherschedules"
-                  element={<TeacherSchedules />}
+                  path="/teacherschedules/*"
+                  element={
+                    <PrivateRoute>
+                      <TeacherSchedules />
+                    </PrivateRoute>
+                  }
                 />
-                <Route path="/settings" element={<Settings />} />
-                <Route path="/logout" element={<LogOut />} />
                 <Route
-                  path="/registrationpage"
+                  path="/settingspage/*"
+                  element={
+                    <PrivateRoute>
+                      <SettingsPage />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/logout/*"
+                  element={
+                    <PrivateRoute>
+                      <LogOut handleLogout={handleLogout} />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/registrationpage/*"
                   element={<RegistrationForm />}
                 />
-                <Route path="/loginpage" element={<LoginPage />} />
-                <Route path="/addschedule" element={<AddSchedule />} />
-                <Route path="/managestudent" element={<ManageStudent />} />
                 <Route
-                  path="/StudentLeavePortal"
-                  element={<StudentLeavePortal />}
+                  path="/loginpage"
+                  element={<LoginPage handleLogin={handleLogin} />}
                 />
                 <Route
-                  path="/leavemanagementteacher"
-                  element={<LeaveManagementTeacher />}
+                  path="/addschedule/*"
+                  element={
+                    <PrivateRoute>
+                      <AddSchedule />
+                    </PrivateRoute>
+                  }
                 />
                 <Route
-                  path="/studentattendance"
-                  element={<StudentAttendance />}
+                  path="/managestudent/*"
+                  element={
+                    <PrivateRoute>
+                      <ManageStudent />
+                    </PrivateRoute>
+                  }
                 />
-                {/* <Route path="/addstudent" element={<AddStudent />} /> */}
+                <Route
+                  path="/StudentLeavePortal/*"
+                  element={
+                    <PrivateRoute>
+                      <StudentLeavePortal />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/leavemanagementteacher/*"
+                  element={
+                    <PrivateRoute>
+                      <LeaveManagementTeacher />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/studentattendance/*"
+                  element={
+                    <PrivateRoute>
+                      <StudentAttendance />
+                    </PrivateRoute>
+                  }
+                />
               </Routes>
+              {/* </Layout> */}
             </div>
           </div>
         </div>

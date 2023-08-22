@@ -50,7 +50,10 @@ const validationSchema = Yup.object().shape({
     .required("Password is required"),
 });
 
-const LoginPage: React.FC = () => {
+interface LoginPageProps {
+  handleLogin: (userData: any) => void;
+}
+const LoginPage: React.FC<LoginPageProps> = ({ handleLogin }) => {
   const dispatch = useDispatch<any>();
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
@@ -58,18 +61,25 @@ const LoginPage: React.FC = () => {
 
   const navigate = useNavigate();
   const [loginSuccess, setLoginSuccess] = useState(false);
-  const [loginError, setLoginError] = useState("");
+  const [loginError, setLoginError] = useState<string | null>(null);
 
   const handleSubmit = async (values: any) => {
     try {
       const response = await dispatch(login(values.email, values.password));
-      if (response.success) {
-        setLoginSuccess(true);
+
+      // Check if the login response was successful
+
+      console.log(response, "::::");
+
+      if (response && response.success) {
+        navigate("/commondashboard"); // Navigate to the dashboard on success
       } else {
-        setLoginError(response.message);
+        setLoginError("Incorrect email or password"); // Show error message for unsuccessful login
       }
+      console.log(response);
     } catch (error) {
       console.error("Error during login:", error);
+      setLoginError("An error occurred during login");
     }
   };
 

@@ -171,7 +171,7 @@ const Sidebar: React.FC<any> = ({ menuItems }) => {
             </ListItem>
           ))}
 
-          <ListItem component={StyledNavLink} to="/settings">
+          <ListItem component={StyledNavLink} to="/settingspage">
             <ListItemIcon style={{ display: "flex", justifyContent: "center" }}>
               <SettingsIcon />
             </ListItemIcon>
@@ -183,12 +183,6 @@ const Sidebar: React.FC<any> = ({ menuItems }) => {
             </ListItemIcon>
             <ListItemText primary={hideContent ? "" : "Logout"} />
           </ListItem>
-          {/* <ListItem component={StyledNavLink} to="/loginpage">
-            <ListItemIcon style={{ display: "flex", justifyContent: "center" }}>
-              <ExitToAppIcon />
-            </ListItemIcon>
-            <ListItemText primary={hideContent ? "" : "Login"} />
-          </ListItem> */}
         </List>
       </StyledDrawer>
     </ThemeProvider>
