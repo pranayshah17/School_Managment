@@ -2,9 +2,9 @@ import { AddBox, Event, Schedule, SchoolOutlined } from "@mui/icons-material";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import { CssBaseline, createTheme } from "@mui/material";
 import { ThemeProvider } from "@mui/system";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import CommonDashboard from "./CommonDashboard";
 import PrivateRoute from "./PrivateRoute/PrivateRoute";
 import Header from "./Slices/Components/HeaderComponent";
@@ -27,14 +27,24 @@ import RegistrationForm from "./login_signup/RegistrationForm";
 function App() {
   const [isOpen, setIsOpen] = useState(false);
   const [userinfo, setUserinfo] = useState(null); // Change to initial user state
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    // Set initial isAuthenticated based on token presence in local storage
+    const authToken = localStorage.getItem("authToken");
+    return !!authToken; // Convert to boolean
+  });
 
-  const location = useLocation();
-
-  const isLoginPage = location.pathname.startsWith("/login");
-  const isRegistrationPage = location.pathname.startsWith("/registrationpage");
+  useEffect(() => {
+    // Update the state based on the token's existence
+    setTimeout(() => {
+      const authToken = localStorage.getItem("authToken");
+      setIsAuthenticated(!!authToken); // Convert to boolean
+    }, 1000); // Adjust the delay as needed
+  }, []);
+  console.log(isAuthenticated, "----");
 
   const handleLogin = (userData: any) => {
     setUserinfo(userData);
+    setIsAuthenticated(true);
   };
 
   const handleLogout = () => {
@@ -42,7 +52,7 @@ function App() {
     if (confirmLogout) {
       localStorage.removeItem("authToken"); // Remove token from localStorage
       setUserinfo(null); // Clear user info
-      // navigate("/loginpage"); // Navigate to login page
+      setIsAuthenticated(false); // Navigate to login page
     }
   };
 
@@ -131,131 +141,136 @@ function App() {
   return (
     <BrowserRouter>
       <ThemeProvider theme={theme}>
-        <div className="App" style={{ display: "flex" }}>
-          <CssBaseline />
-          {!isLoginPage && !isRegistrationPage && (
-            <>
-              <Sidebar menuItems={menuItems} />
-            </>
-          )}
-          <div style={{ flex: 1 }}>
-            <Header user={user} menuItems={menuItems} />
-            <div>
-              {/* <Layout user={user} menuItems={menuItems}> */}
-              <Routes>
-                <Route
-                  path="/commondashboard/*"
-                  element={
-                    <PrivateRoute>
-                      <CommonDashboard role={user.role} />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/leaveportal/*"
-                  element={
-                    <PrivateRoute>
-                      <LeaveApplicationForm />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/teacherform/*"
-                  element={
-                    <PrivateRoute>
-                      <TeacherForm />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/leavemanagement/*"
-                  element={
-                    <PrivateRoute>
-                      <LeaveManagement />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/assignclasstostudent/*"
-                  element={<AssignClassToStudent />}
-                />
-                <Route
-                  path="/teacherschedules/*"
-                  element={
-                    <PrivateRoute>
-                      <TeacherSchedules />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/settingspage/*"
-                  element={
-                    <PrivateRoute>
-                      <SettingsPage />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/logout/*"
-                  element={
-                    <PrivateRoute>
-                      <LogOut handleLogout={handleLogout} />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/registrationpage/*"
-                  element={<RegistrationForm />}
-                />
-                <Route
-                  path="/loginpage"
-                  element={<LoginPage handleLogin={handleLogin} />}
-                />
-                <Route
-                  path="/addschedule/*"
-                  element={
-                    <PrivateRoute>
-                      <AddSchedule />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/managestudent/*"
-                  element={
-                    <PrivateRoute>
-                      <ManageStudent />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/StudentLeavePortal/*"
-                  element={
-                    <PrivateRoute>
-                      <StudentLeavePortal />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/leavemanagementteacher/*"
-                  element={
-                    <PrivateRoute>
-                      <LeaveManagementTeacher />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/studentattendance/*"
-                  element={
-                    <PrivateRoute>
-                      <StudentAttendance />
-                    </PrivateRoute>
-                  }
-                />
-              </Routes>
-              {/* </Layout> */}
+        {isAuthenticated ? (
+          <div className="App" style={{ display: "flex" }}>
+            <CssBaseline />
+
+            {/* {!isLoginPage && !isRegistrationPage && (
+          <> */}
+            <Sidebar menuItems={menuItems} />
+            {/* </>
+        )} */}
+            <div style={{ flex: 1 }}>
+              <Header user={user} menuItems={menuItems} />
+              <div>
+                {/* <Layout user={user} menuItems={menuItems}> */}
+                <Routes>
+                  <Route
+                    path="/commondashboard/*"
+                    element={
+                      <PrivateRoute>
+                        <CommonDashboard role={user.role} />
+                      </PrivateRoute>
+                    }
+                  />
+                  <Route
+                    path="/leaveportal/*"
+                    element={
+                      <PrivateRoute>
+                        <LeaveApplicationForm />
+                      </PrivateRoute>
+                    }
+                  />
+                  <Route
+                    path="/teacherform/*"
+                    element={
+                      <PrivateRoute>
+                        <TeacherForm />
+                      </PrivateRoute>
+                    }
+                  />
+                  <Route
+                    path="/leavemanagement/*"
+                    element={
+                      <PrivateRoute>
+                        <LeaveManagement />
+                      </PrivateRoute>
+                    }
+                  />
+                  <Route
+                    path="/assignclasstostudent/*"
+                    element={<AssignClassToStudent />}
+                  />
+                  <Route
+                    path="/teacherschedules/*"
+                    element={
+                      <PrivateRoute>
+                        <TeacherSchedules />
+                      </PrivateRoute>
+                    }
+                  />
+                  <Route
+                    path="/settingspage/*"
+                    element={
+                      <PrivateRoute>
+                        <SettingsPage />
+                      </PrivateRoute>
+                    }
+                  />
+                  <Route
+                    path="/logout/*"
+                    element={
+                      <PrivateRoute>
+                        <LogOut handleLogout={handleLogout} />
+                      </PrivateRoute>
+                    }
+                  />
+                  <Route
+                    path="/registrationpage/*"
+                    element={<RegistrationForm />}
+                  />
+                  <Route
+                    path="/loginpage"
+                    element={<LoginPage handleLogin={handleLogin} />}
+                  />
+                  <Route
+                    path="/addschedule/*"
+                    element={
+                      <PrivateRoute>
+                        <AddSchedule />
+                      </PrivateRoute>
+                    }
+                  />
+                  <Route
+                    path="/managestudent/*"
+                    element={
+                      <PrivateRoute>
+                        <ManageStudent />
+                      </PrivateRoute>
+                    }
+                  />
+                  <Route
+                    path="/StudentLeavePortal/*"
+                    element={
+                      <PrivateRoute>
+                        <StudentLeavePortal />
+                      </PrivateRoute>
+                    }
+                  />
+                  <Route
+                    path="/leavemanagementteacher/*"
+                    element={
+                      <PrivateRoute>
+                        <LeaveManagementTeacher />
+                      </PrivateRoute>
+                    }
+                  />
+                  <Route
+                    path="/studentattendance/*"
+                    element={
+                      <PrivateRoute>
+                        <StudentAttendance />
+                      </PrivateRoute>
+                    }
+                  />
+                </Routes>
+                {/* </Layout> */}
+              </div>
             </div>
           </div>
-        </div>
+        ) : (
+          <LoginPage handleLogin={handleLogin} />
+        )}
       </ThemeProvider>
     </BrowserRouter>
   );

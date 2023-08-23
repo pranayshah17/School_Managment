@@ -72,7 +72,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ handleLogin }) => {
       console.log(response, "::::");
 
       if (response && response.success) {
-        navigate("/commondashboard"); // Navigate to the dashboard on success
+        navigate("/commandashboard"); // Navigate to the dashboard on success
       } else {
         setLoginError("Incorrect email or password"); // Show error message for unsuccessful login
       }

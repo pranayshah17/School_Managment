@@ -1,13 +1,12 @@
 import { Card, Paper, Typography } from "@mui/material";
 import React from "react";
+import { useSelector } from "react-redux";
+import { RootState, useAppDispatch } from "../../../Store/Store";
 
-interface TeacherCountCardProps {
-  teacherCount: number;
-}
-
-const TeacherCountCard: React.FC<TeacherCountCardProps> = ({
-  teacherCount,
-}) => {
+const TeacherCountCard: React.FC = () => {
+  const dispatch = useAppDispatch();
+  const users: any = useSelector((state: RootState) => state.user.data);
+  const teacherCount = users.data.teacher;
   return (
     <Card style={{ boxShadow: "0px 6px 16px rgba(0, 0, 0, 0.1)" }}>
       <Paper
