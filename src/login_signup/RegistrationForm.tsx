@@ -10,11 +10,46 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import axios from "axios";
 import { useFormik } from "formik";
+import { useSelector } from "react-redux";
 import * as Yup from "yup";
+import { RootState, useAppDispatch } from "../Store/Store";
+import {
+  registrationFailure,
+  registrationStart,
+  registrationSuccess,
+} from "./RegisterSlice";
 
 const RegistrationForm = () => {
-  // Define validation schema using Yup
+  const dispatch = useAppDispatch();
+  const registrationLoading = useSelector(
+    (state: RootState) => state.register.registrationLoading
+  );
+  const registrationError = useSelector(
+    (state: RootState) => state.register.registrationError
+  );
+
+  // const onSubmit = async (values: any) => {
+  //   dispatch(registrationStart());
+
+  //   try {
+  //     // Replace 'YOUR_API_ENDPOINT' with the actual API endpoint
+  //     const response = await axios.post(
+  //       "http://192.168.2.68:3001/auth/signup",
+  //       values
+  //     );
+
+  //     // On successful response
+  //     dispatch(registrationSuccess());
+  //     console.log("Registration successful", response.data);
+  //   } catch (error: any) {
+  //     // On error
+  //     dispatch(registrationFailure(error.message));
+  //     console.error("Registration error", error);
+  //   }
+  // };
+
   const validationSchema = Yup.object({
     firstName: Yup.string().required("First name is required"),
     lastName: Yup.string().required("Last name is required"),
@@ -43,9 +78,40 @@ const RegistrationForm = () => {
       role: "",
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      // Here you can handle the form submission
-      console.log(values);
+    onSubmit: async (values: any) => {
+      dispatch(registrationStart());
+
+      try {
+        const authToken = localStorage.getItem("authToken");
+        const headers = {
+          Authorization: `Bearer ${authToken}`,
+          "Content-Type": "application/json",
+        };
+        // Replace 'YOUR_API_ENDPOINT' with the actual API endpoint
+        const response = await axios.post(
+          "http://192.168.2.68:3001/auth/signup",
+          {
+            username: values.userName,
+            firstname: values.firstName,
+            lastname: values.lastName,
+            email: values.email,
+            password: values.password,
+            phone: values.mobile,
+            role: values.role,
+          },
+          {
+            headers: headers,
+          }
+        );
+
+        // On successful response
+        dispatch(registrationSuccess());
+        console.log("Registration successful", response.data);
+      } catch (error: any) {
+        // On error
+        dispatch(registrationFailure(error.message));
+        console.error("Registration error", error);
+      }
     },
   });
 
@@ -154,9 +220,9 @@ const RegistrationForm = () => {
                   onBlur={formik.handleBlur}
                   error={formik.touched.role && Boolean(formik.errors.role)}
                 >
-                  <MenuItem value="principal">Principal</MenuItem>
-                  <MenuItem value="teacher">Teacher</MenuItem>
-                  <MenuItem value="student">Student</MenuItem>
+                  <MenuItem value="Principal">Principal</MenuItem>
+                  <MenuItem value="Teacher">Teacher</MenuItem>
+                  <MenuItem value="Student">Student</MenuItem>
                 </Select>
               </FormControl>
             </Grid>

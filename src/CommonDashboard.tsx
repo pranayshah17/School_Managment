@@ -1,5 +1,5 @@
 import React from "react";
-import PrincipalDashboardPage from "./Slices/Components/DashBoard/PrincipalDashboard";
+import PrincipalDashboardPage from "./Slices/PrincipalDashboard/PrincipalDashboard";
 import StudentDashBoard from "./StudentDashBoard/StudentDashBoard";
 import TeacherDasboard from "./TeacherDashBoard.tsx/TeacherDasboard";
 

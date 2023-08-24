@@ -2,7 +2,7 @@ import { AddBox, Event, Schedule, SchoolOutlined } from "@mui/icons-material";
 import EventNoteIcon from "@mui/icons-material/EventNote";
 import { CssBaseline, createTheme } from "@mui/material";
 import { ThemeProvider } from "@mui/system";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import CommonDashboard from "./CommonDashboard";
@@ -33,18 +33,19 @@ function App() {
     return !!authToken; // Convert to boolean
   });
 
-  useEffect(() => {
-    // Update the state based on the token's existence
-    setTimeout(() => {
-      const authToken = localStorage.getItem("authToken");
-      setIsAuthenticated(!!authToken); // Convert to boolean
-    }, 1000); // Adjust the delay as needed
-  }, []);
-  console.log(isAuthenticated, "----");
+  // useEffect(() => {
+  //   // Update the state based on the token's existence
+  //   setTimeout(() => {
+  //     const authToken = localStorage.getItem("authToken");
+  //     setIsAuthenticated(!!authToken); // Convert to boolean
+  //   }, 1000); // Adjust the delay as needed
+  // }, []);
+  // console.log(isAuthenticated, "----");
 
   const handleLogin = (userData: any) => {
     setUserinfo(userData);
     setIsAuthenticated(true);
+    localStorage.setItem("authToken", userData.token);
   };
 
   const handleLogout = () => {
@@ -144,19 +145,13 @@ function App() {
         {isAuthenticated ? (
           <div className="App" style={{ display: "flex" }}>
             <CssBaseline />
-
-            {/* {!isLoginPage && !isRegistrationPage && (
-          <> */}
             <Sidebar menuItems={menuItems} />
-            {/* </>
-        )} */}
             <div style={{ flex: 1 }}>
               <Header user={user} menuItems={menuItems} />
               <div>
-                {/* <Layout user={user} menuItems={menuItems}> */}
                 <Routes>
                   <Route
-                    path="/commondashboard/*"
+                    path="/commondashboard"
                     element={
                       <PrivateRoute>
                         <CommonDashboard role={user.role} />
@@ -264,12 +259,19 @@ function App() {
                     }
                   />
                 </Routes>
-                {/* </Layout> */}
               </div>
             </div>
           </div>
         ) : (
-          <LoginPage handleLogin={handleLogin} />
+          <>
+            <Routes>
+              <Route
+                path="/loginpage"
+                element={<LoginPage handleLogin={handleLogin} />}
+              />
+              <Route path="/registrationpage" element={<RegistrationForm />} />
+            </Routes>
+          </>
         )}
       </ThemeProvider>
     </BrowserRouter>

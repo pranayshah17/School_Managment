@@ -1,5 +1,7 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
+import { RootState } from "../Store/Store";
 
 // interface PrivateRouteProps {
 //   isAuthenticated: boolean;
@@ -12,10 +14,14 @@ const isAuthenticated = () => {
 };
 
 const PrivateRoute: React.FC<any> = ({ children }) => {
-  if (!isAuthenticated()) {
-    return <Navigate to="/loginpage" />;
-  } else {
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  );
+
+  if (isAuthenticated) {
     return children;
+  } else {
+    return <Navigate to="/loginpage" />;
   }
 };
 

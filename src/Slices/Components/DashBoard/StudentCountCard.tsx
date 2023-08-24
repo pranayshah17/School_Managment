@@ -2,20 +2,17 @@ import { Card, Paper, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState, useAppDispatch } from "../../../Store/Store";
-import { fetchUsers } from "../../Principal/userSlice";
-
-
+import { fetchUsers } from "../../PrincipalDashboard/userSlice";
 
 const StudentCountCard: React.FC = () => {
   const dispatch = useAppDispatch();
-  const users: any = useSelector((state: RootState) => state.user.data);
-  const studentCount = users.data.student;
-  console.log(users);
-  const loading = useSelector((state: RootState) => state.user.loading);
-
   useEffect(() => {
     dispatch(fetchUsers());
   }, [dispatch]);
+  const users: any = useSelector((state: RootState) => state.user.data);
+  const studentCount = users.data.student;
+  // console.log(users);
+  const loading = useSelector((state: RootState) => state.user.loading);
 
   return (
     <Card style={{ boxShadow: "0px 6px 16px rgba(0, 0, 0, 0.1)" }}>

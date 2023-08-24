@@ -1,14 +1,22 @@
 import { CssBaseline, Grid, useMediaQuery, useTheme } from "@mui/material";
 import { Container } from "@mui/system";
+import { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { RootState, useAppDispatch } from "../../../Store/Store";
+import { RootState, useAppDispatch } from "../../Store/Store";
+import GenderChart from "../Components/DashBoard/GenderCharts";
+import StudentCountCard from "../Components/DashBoard/StudentCountCard";
+import TeacherCountCard from "../Components/DashBoard/TeacherCountCard";
 import AttendanceChart from "./AttendaceChart";
-import GenderChart from "./GenderCharts";
-import StudentCountCard from "./StudentCountCard";
-import TeacherCountCard from "./TeacherCountCard";
+import { fetchUsers } from "./userSlice";
 const PrincipalDashboardPage = () => {
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(fetchUsers());
+  }, [dispatch]);
   const users: any = useSelector((state: RootState) => state.user.data);
+
+  console.log(users);
   const malePercentage = users.data.malePercentage;
   const femalePercentage = users.data.femalePercentage;
   const theme = useTheme();

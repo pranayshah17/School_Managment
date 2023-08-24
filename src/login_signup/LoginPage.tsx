@@ -12,12 +12,13 @@ import {
 } from "@mui/material";
 import { Box, styled } from "@mui/system";
 import { ErrorMessage, Field, Form, Formik } from "formik"; // Import Formik components
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, useNavigate } from "react-router-dom";
 import * as Yup from "yup"; // Import Yup for validation
 import { RootState } from "../Store/Store";
-import { login } from "./AuthActions";
+import { login } from "./authSlice";
+// import { login } from "./AuthActions";
 
 const StyledPaper = styled(Paper)(({ theme }) => ({
   display: "flex",
@@ -63,25 +64,41 @@ const LoginPage: React.FC<LoginPageProps> = ({ handleLogin }) => {
   const [loginSuccess, setLoginSuccess] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
 
-  const handleSubmit = async (values: any) => {
+  // const handleSubmit = async (values: any) => {
+  //   try {
+  //     const response = await dispatch(login(values.email, values.password));
+
+  //     if (response && response.success) {
+  //       setLoginSuccess(true); // Set the login success state
+  //     } else {
+  //       setLoginError("Incorrect email or password");
+  //     }
+  //   } catch (error) {
+  //     console.error("Error during login:", error);
+  //     setLoginError("An error occurred during login");
+  //   }
+  // };
+  const handleSubmit = async (values:any) => {
     try {
       const response = await dispatch(login(values.email, values.password));
-
-      // Check if the login response was successful
-
-      console.log(response, "::::");
-
+  
       if (response && response.success) {
-        navigate("/commandashboard"); // Navigate to the dashboard on success
+        // Redirect upon successful login
+        handleLogin(response.userData); // Update with relevant user data
       } else {
-        setLoginError("Incorrect email or password"); // Show error message for unsuccessful login
+        setLoginError("Incorrect email or password");
       }
-      console.log(response);
     } catch (error) {
       console.error("Error during login:", error);
       setLoginError("An error occurred during login");
     }
   };
+
+  useEffect(() => {
+    if (loginSuccess) {
+      navigate("/commondashboard");
+    }
+  }, [loginSuccess]);
 
   return (
     <Container component="main" maxWidth="xs">

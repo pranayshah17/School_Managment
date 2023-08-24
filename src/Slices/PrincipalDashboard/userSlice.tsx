@@ -37,12 +37,6 @@ const userSlice = createSlice({
   },
 });
 
-// const authToken = localStorage.getItem("authToken");
-// const headers = {
-//   Authorization: `Bearer ${authToken}`,
-//   "Content-Type": "application/json", // You can set other headers as needed
-// };
-
 export const fetchUsers = () => {
   return async (dispatch: any) => {
     try {
