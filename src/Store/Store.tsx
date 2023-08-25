@@ -11,11 +11,11 @@ import thunk from "redux-thunk";
 import authSlice from "../login_signup/authSlice";
 import HeaderSlice from "../Slices/HeaderSlice";
 // import studentslice from "../Slices/Principal/studentslice";
-import registerSlice from "../login_signup/RegisterSlice";
+import RegisterSlice from "../login_signup/RegisterSlice";
 import AttendanceSlice from "../Slices/PrincipalDashboard/AttendanceSlice";
+import TeacherListSlice from "../Slices/PrincipalDashboard/TeacherListSlice";
 import userSlice from "../Slices/PrincipalDashboard/userSlice";
 import SlidebarSlices from "../Slices/SlidebarSlices";
-import RegisterSlice from "../login_signup/RegisterSlice";
 
 // Create a persist configuration
 const persistConfig = {
@@ -33,6 +33,7 @@ const persistedReducer = persistReducer(
     user: userSlice,
     attendace: AttendanceSlice,
     register: RegisterSlice,
+    teacher: TeacherListSlice,
   })
 );
 

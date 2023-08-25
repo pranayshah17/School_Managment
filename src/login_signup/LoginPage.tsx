@@ -64,27 +64,13 @@ const LoginPage: React.FC<LoginPageProps> = ({ handleLogin }) => {
   const [loginSuccess, setLoginSuccess] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
 
-  // const handleSubmit = async (values: any) => {
-  //   try {
-  //     const response = await dispatch(login(values.email, values.password));
-
-  //     if (response && response.success) {
-  //       setLoginSuccess(true); // Set the login success state
-  //     } else {
-  //       setLoginError("Incorrect email or password");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error during login:", error);
-  //     setLoginError("An error occurred during login");
-  //   }
-  // };
-  const handleSubmit = async (values:any) => {
+  const handleSubmit = async (values: any) => {
     try {
       const response = await dispatch(login(values.email, values.password));
-  
+
       if (response && response.success) {
-        // Redirect upon successful login
-        handleLogin(response.userData); // Update with relevant user data
+        setLoginSuccess(true); // Update loginSuccess state
+        handleLogin({ token: response.data }); //
       } else {
         setLoginError("Incorrect email or password");
       }

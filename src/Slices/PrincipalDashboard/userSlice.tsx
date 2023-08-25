@@ -17,11 +17,7 @@ const initialState: UserState = {
 
 const userSlice = createSlice({
   name: "user",
-  initialState: {
-    data: [],
-    loading: "idle",
-    error: null,
-  },
+  initialState: initialState,
   reducers: {
     fetchUsersPending: (state) => {
       state.loading = "pending";
@@ -38,26 +34,22 @@ const userSlice = createSlice({
 });
 
 export const fetchUsers = () => {
-  return async (dispatch: any) => {
+  return async () => {
     try {
-      dispatch(fetchUsersPending());
-
       const authToken = localStorage.getItem("authToken");
       const headers = {
         Authorization: `Bearer ${authToken}`,
         "Content-Type": "application/json",
       };
-
       const response = await axios.get(
         "http://192.168.2.68:3001/dashboard/principal",
         {
           headers: headers,
         }
       );
-
-      dispatch(fetchUsersFulfilled(response.data));
-    } catch (error: any) {
-      dispatch(fetchUsersRejected(error.message || "An error occurred"));
+      return response.data;
+    } catch (error) {
+      throw error;
     }
   };
 };
