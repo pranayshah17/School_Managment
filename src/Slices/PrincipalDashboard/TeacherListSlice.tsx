@@ -49,8 +49,6 @@ const TeacherListSlice = createSlice({
 export const fetchTeachers = () => {
   return async (dispatch: any) => {
     try {
-      dispatch(fetchTeachersPending());
-
       const authToken = localStorage.getItem("authToken");
       const headers = {
         Authorization: `Bearer ${authToken}`,
@@ -61,9 +59,10 @@ export const fetchTeachers = () => {
         headers: headers,
       });
 
-      dispatch(fetchTeachersFulfilled(response.data.data));
+      // dispatch(fetchTeachersFulfilled(response.data.data));
+      return response.data.data;
     } catch (error: any) {
-      dispatch(fetchTeachersRejected(error.message || "An error occurred"));
+      throw error;
     }
   };
 };

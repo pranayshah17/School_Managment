@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import CommonDashboard from "./CommonDashboard";
 import AddTeacherPage from "./Principal/AddTeacherPage";
+import AssignTeacher from "./Principal/AssignTeacher";
 import PrivateRoute from "./PrivateRoute/PrivateRoute";
 import Header from "./Slices/Components/HeaderComponent";
 import LeaveManagement from "./Slices/Components/Pages/LeaveManagment";
@@ -15,6 +16,7 @@ import LogOut from "./Slices/Components/Pages/LogOut";
 import SettingsPage from "./Slices/Components/Pages/Settings";
 import TeacherSchedules from "./Slices/Components/Pages/TeacherSchedules";
 import Sidebar from "./Slices/Components/Sidebar";
+import { RootState } from "./Store/Store";
 import StudentLeavePortal from "./Student/StudentLeavePortal";
 import AddSchedule from "./Teacher/AddSchedule";
 import AssignClassToStudent from "./Teacher/AssignClassToStudent";
@@ -24,7 +26,20 @@ import StudentAttendance from "./Teacher/StudentAttendace";
 import LoginPage from "./login_signup/LoginPage";
 import RegistrationForm from "./login_signup/RegistrationForm";
 
+interface Teacher {
+  id: number;
+  firstname: string;
+  lastname: string;
+  // ... other properties
+}
+
+interface TeacherState {
+  data: Teacher[];
+  // ... other state properties
+}
+
 function App() {
+  const teacherList = useSelector((state: RootState) => state.teacher.data);
   const [isOpen, setIsOpen] = useState(false);
   const [userinfo, setUserinfo] = useState(null);
   const [loginSuccess, setLoginSuccess] = useState(false);
@@ -85,6 +100,11 @@ function App() {
         icon: <EventNoteIcon />,
         text: "Teacher Schedules",
         route: "/teacherschedules",
+      },
+      {
+        icon: <EventNoteIcon />,
+        text: "Assign Teacher",
+        route: "/assignteacher",
       },
     ];
   } else if (user.role === "Teacher") {
@@ -192,6 +212,14 @@ function App() {
                   element={
                     <PrivateRoute>
                       <TeacherSchedules />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/assignteacher/*"
+                  element={
+                    <PrivateRoute>
+                      <AssignTeacher teacherList={teacherList} />
                     </PrivateRoute>
                   }
                 />

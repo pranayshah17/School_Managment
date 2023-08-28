@@ -42,8 +42,6 @@ const AttendaceSlice = createSlice({
 export const fetchAttendace = () => {
   return async (dispatch: any) => {
     try {
-      dispatch(fetchAttendacePending());
-
       const authToken = localStorage.getItem("authToken");
       const headers = {
         Authorization: `Bearer ${authToken}`,
@@ -57,10 +55,12 @@ export const fetchAttendace = () => {
         }
       );
 
-      dispatch(fetchAttendaceFulfilled(response.data));
+      // dispatch(fetchAttendaceFulfilled(response.data));
+      return response.data;
     } catch (error: any) {
       console.log("Error response:", error.response);
       dispatch(fetchAttendaceRejected(error.message || "An error occurred"));
+      // throw error;
     }
   };
 };
