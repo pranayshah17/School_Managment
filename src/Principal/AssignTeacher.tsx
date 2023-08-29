@@ -11,13 +11,12 @@ import { styled } from "@mui/material/styles";
 import axios from "axios";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import * as Yup from "yup";
 import { useAppDispatch } from "../Store/Store";
-import {
-  AssignFailure,
-  AssignStart,
-  AssignSuccess,
-} from "./AssignTeacherSlice";
+import { AssignFailure, AssignSuccess } from "./AssignTeacherSlice";
+import { selectEditData, setEditData } from "./EditTeacherAssignSlice";
+import TeacherAssignTable from "./TeacherAssignTable";
 
 const validationSchema = Yup.object().shape({
   className: Yup.string().required("Class Name is required"),
@@ -44,13 +43,14 @@ const AssignTeacher: React.FC<{ teacherList: Array<string> }> = ({
   teacherList,
 }) => {
   const dispatch = useAppDispatch();
+  const editData = useSelector(selectEditData);
+
   const [teachersWithRoleTeacher, setTeachersWithRoleTeacher] = useState<
     Teacher[]
   >([]);
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    // Fetch the list of teachers with the role "teacher"
     const authToken = localStorage.getItem("authToken");
     const headers = {
       Authorization: `Bearer ${authToken}`,
@@ -76,7 +76,6 @@ const AssignTeacher: React.FC<{ teacherList: Array<string> }> = ({
     values: ClassAssignment,
     { resetForm }: FormikHelpers<ClassAssignment>
   ) => {
-    dispatch(AssignStart());
     try {
       const authToken = localStorage.getItem("authToken");
       const headers = {
@@ -84,24 +83,37 @@ const AssignTeacher: React.FC<{ teacherList: Array<string> }> = ({
         "Content-Type": "application/json",
       };
 
-      const response = await axios.post(
-        "http://192.168.2.68:3001/class",
-        {
+      if (editData) {
+        // Update the edited data in the editData slice of Redux store
+        const updatedData = {
+          ...editData,
           className: values.className,
           grade: values.grade,
           classTeacher: values.classTeacher,
-        },
-        {
-          headers: headers,
-        }
-      );
+        };
+        dispatch(setEditData(null));
+      } else {
+        // Perform your normal submission logic for new assignments
+        const response = await axios.post(
+          "http://192.168.2.68:3001/class",
+          {
+            className: values.className,
+            grade: values.grade,
+            classTeacher: values.classTeacher,
+          },
+          {
+            headers: headers,
+          }
+        );
 
-      dispatch(AssignSuccess(response.data));
-      console.log(response.data);
-      setSuccess(true);
+        dispatch(AssignSuccess(response.data));
+        console.log(response.data);
+        setSuccess(true);
+        window.alert("Data inserted successfully!");
+      }
+
       resetForm();
-      window.alert("Data inserted successfully!");
-      return response.data;
+      dispatch(setEditData(null));
     } catch (error: any) {
       console.error("Error assigning class:", error);
       dispatch(AssignFailure(error.message));
@@ -110,79 +122,84 @@ const AssignTeacher: React.FC<{ teacherList: Array<string> }> = ({
   };
 
   return (
-    <Container maxWidth="xs" sx={{ paddingTop: "20px" }}>
-      <Paper elevation={3} style={{ padding: "25px" }}>
-        <Formik
-          initialValues={{
-            className: "",
-            grade: "",
-            classTeacher: "",
-          }}
-          validationSchema={validationSchema}
-          onSubmit={handleSubmit}
-        >
-          {({ handleSubmit, values, errors, touched }) => (
-            <Form onSubmit={handleSubmit}>
-              <Typography variant="h5" gutterBottom>
-                Assign Class
-              </Typography>
-              <Box>
-                <Field
-                  type="text"
-                  label="Class Name"
-                  name="className"
-                  as={TextField}
-                  fullWidth
-                  margin="normal"
-                  error={touched.className && !!errors.className}
-                />
-                {touched.className && errors.className && (
-                  <div>{errors.className}</div>
-                )}
+    <>
+      <Container maxWidth="xs" sx={{ paddingTop: "20px" }}>
+        <Paper elevation={3} style={{ padding: "25px" }}>
+          <Formik
+            initialValues={{
+              className: editData ? editData.className : "",
+              grade: editData ? editData.grade : "",
+              classTeacher: editData ? editData.classTeacher : "",
+            }}
+            validationSchema={validationSchema}
+            onSubmit={handleSubmit}
+          >
+            {({ handleSubmit, values, errors, touched }) => (
+              <Form onSubmit={handleSubmit}>
+                <Typography variant="h5" gutterBottom>
+                  Assign Class
+                </Typography>
+                <Box>
+                  <Field
+                    type="text"
+                    label="Class Name"
+                    name="className"
+                    as={TextField}
+                    fullWidth
+                    margin="normal"
+                    error={touched.className && !!errors.className}
+                  />
+                  {touched.className && errors.className && (
+                    <div>{errors.className}</div>
+                  )}
 
-                <Field
-                  type="text"
-                  label="Grade"
-                  name="grade"
-                  as={TextField}
-                  fullWidth
-                  margin="normal"
-                  error={touched.grade && !!errors.grade}
-                />
-                {touched.grade && errors.grade && <div>{errors.grade}</div>}
+                  <Field
+                    type="text"
+                    label="Grade"
+                    name="grade"
+                    as={TextField}
+                    fullWidth
+                    margin="normal"
+                    error={touched.grade && !!errors.grade}
+                  />
+                  {touched.grade && errors.grade && <div>{errors.grade}</div>}
 
-                <Field
-                  label="Class Teacher"
-                  name="classTeacher"
-                  as={TextField}
+                  <Field
+                    label="Class Teacher"
+                    name="classTeacher"
+                    as={TextField}
+                    fullWidth
+                    margin="normal"
+                    select
+                    error={touched.classTeacher && !!errors.classTeacher}
+                  >
+                    {teachersWithRoleTeacher?.map((teacher: Teacher) => (
+                      <MenuItem key={teacher.id} value={teacher.id}>
+                        {teacher.firstname}
+                      </MenuItem>
+                    ))}
+                  </Field>
+                  {touched.classTeacher && errors.classTeacher && (
+                    <div>{errors.classTeacher}</div>
+                  )}
+                </Box>
+                <SubmitButton
+                  type="submit"
+                  variant="contained"
+                  color="primary"
                   fullWidth
-                  margin="normal"
-                  select
-                  error={touched.classTeacher && !!errors.classTeacher}
                 >
-                  {teachersWithRoleTeacher.map((teacher: Teacher) => (
-                    <MenuItem key={teacher.id} value={teacher.id}>
-                      {teacher.firstname}
-                    </MenuItem>
-                  ))}
-                </Field>
-                {touched.classTeacher && errors.classTeacher && (
-                  <div>{errors.classTeacher}</div>
-                )}
-              </Box>
-              <SubmitButton
-                type="submit"
-                variant="contained"
-                color="primary"
-                fullWidth
-              >
-                Assign
-              </SubmitButton>
-            </Form>
-          )}
-        </Formik>
-      </Paper>
-    </Container>
+                  Assign
+                </SubmitButton>
+              </Form>
+            )}
+          </Formik>
+        </Paper>
+      </Container>
+      <Container sx={{ paddingTop: "20px" }}>
+        <TeacherAssignTable />
+      </Container>
+    </>
   );
 };
 

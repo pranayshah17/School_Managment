@@ -60,6 +60,7 @@ export const fetchTeachers = () => {
       });
 
       // dispatch(fetchTeachersFulfilled(response.data.data));
+      console.log("=========>", response.data.data);
       return response.data.data;
     } catch (error: any) {
       throw error;

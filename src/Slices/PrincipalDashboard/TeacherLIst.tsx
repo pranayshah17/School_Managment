@@ -15,12 +15,14 @@ interface Teacher {
   lastname: string;
   username: string;
   email: string;
-  // ... other fields
 }
 
 export const TeacherList: React.FC = () => {
+  const isLoading = useSelector((state: RootState) => state.teacher.loading);
+  const teachers: any[] = useSelector((state: RootState) => state.teacher.data);
+
   const dispatch = useAppDispatch();
-  const [rows, setRows] = useState<GridRowsProp>([]);
+
   const [editTeacherData, setEditTeacherData] = useState<Teacher | null>(null);
   const columns: GridColDef[] = [
     {
@@ -56,15 +58,18 @@ export const TeacherList: React.FC = () => {
     dispatch(fetchTeachers());
   }, [dispatch]);
 
-  const teachers: any[] = useSelector((state: RootState) => state.teacher.data);
-
   useEffect(() => {
-    setRows(teachers);
+    console.log(teachers);
+    if (teachers && teachers.length > 0) {
+      setRows(teachers);
+    }
   }, [teachers]);
 
-  const handleEdit = async (editedTeacher: any) => {
+  const [rows, setRows] = useState<GridRowsProp>([]);
+  console.log(rows);
+
+  async function handleEdit(editedTeacher: any): Promise<void> {
     try {
-      // Call your fetch teacher API here
       const response = await axios.get(
         `http://192.168.2.68:3001/user/${editedTeacher}`,
         {
@@ -75,20 +80,15 @@ export const TeacherList: React.FC = () => {
       );
 
       if (response.status === 200) {
-        // Set the teacher data to be edited
         setEditTeacherData(response.data.data);
-
-        // You can use a state to control the visibility of the form
-        // Open the RegistrationForm in edit mode
       }
     } catch (error) {
       console.error("Error fetching teacher:", error);
     }
-  };
+  }
 
   const handleDelete = async (id: string) => {
     try {
-      // Call your delete API here
       const response = await axios.delete(
         `http://192.168.2.68:3001/user/${id}`,
         {
@@ -99,7 +99,6 @@ export const TeacherList: React.FC = () => {
       );
 
       if (response.status === 200) {
-        // If the API call is successful, dispatch the deleteTeacher action
         dispatch(deleteTeacher(id));
       }
     } catch (error) {
@@ -111,7 +110,11 @@ export const TeacherList: React.FC = () => {
     <Container>
       <div style={{ height: 480, width: "100%" }}>
         <h1 style={{ textAlign: "center" }}>Teacher List</h1>
-        <DataGrid rows={rows} columns={columns} pagination />
+        {isLoading ? (
+          <p>Loading...</p>
+        ) : (
+          <DataGrid rows={rows} columns={columns} pagination />
+        )}
       </div>
     </Container>
   );

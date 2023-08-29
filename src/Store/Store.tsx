@@ -13,6 +13,7 @@ import HeaderSlice from "../Slices/HeaderSlice";
 // import studentslice from "../Slices/Principal/studentslice";
 import RegisterSlice from "../login_signup/RegisterSlice";
 import AssignTeacherSlice from "../Principal/AssignTeacherSlice";
+import EditTeacherAssignSlice from "../Principal/EditTeacherAssignSlice";
 import AttendanceSlice from "../Slices/PrincipalDashboard/AttendanceSlice";
 import TeacherListSlice from "../Slices/PrincipalDashboard/TeacherListSlice";
 import userSlice from "../Slices/PrincipalDashboard/userSlice";
@@ -36,6 +37,7 @@ const persistedReducer = persistReducer(
     register: RegisterSlice,
     teacher: TeacherListSlice,
     class: AssignTeacherSlice,
+    editData: EditTeacherAssignSlice,
   })
 );
 

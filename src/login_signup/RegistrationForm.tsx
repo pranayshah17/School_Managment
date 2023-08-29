@@ -241,7 +241,7 @@ const RegistrationForm = ({ initialValues, isEditing }: any) => {
             color="primary"
             style={{ marginTop: "16px" }}
           >
-            {isEditing ? "Save Changes" : "Regitser"}
+            {isEditing ? "Save Changes" : "Register"}
           </Button>
         </form>
       </Paper>
