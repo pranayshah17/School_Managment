@@ -10,97 +10,74 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { editTeacher } from "../Slices/PrincipalDashboard/TeacherListSlice";
 import { useAppDispatch } from "../Store/Store";
-import {
-  registrationFailure,
-  registrationStart,
-  registrationSuccess,
-} from "./RegisterSlice";
+import { registerUser } from "./RegisterSlice";
 
-const RegistrationForm = ({ initialValues, isEditing }: any) => {
+const RegistrationForm = ({
+  initialValues,
+  isEditing,
+  setEditeData,
+  editeData,
+}: any) => {
   const dispatch = useAppDispatch();
 
   const validationSchema = Yup.object({
-    firstName: Yup.string().required("First name is required"),
-    lastName: Yup.string().required("Last name is required"),
-    userName: Yup.string().required("Username is required"),
+    firstname: Yup.string().required("First name is required"),
+    lastname: Yup.string().required("Last name is required"),
+    username: Yup.string().required("username is required"),
     email: Yup.string()
       .email("Invalid email address")
       .required("Email is required"),
     password: Yup.string()
       .min(6, "Password must be at least 6 characters")
       .required("Password is required"),
-    mobile: Yup.string()
-      .matches(/^[0-9]{10}$/, "Invalid mobile number")
-      .required("Mobile number is required"),
+    phone: Yup.string()
+      .matches(/^[0-9]{10}$/, "Invalid phone number")
+      .required("phone number is required"),
     role: Yup.string().required("Role is required"),
   });
 
-  // Initialize Formik
   const formik = useFormik({
     initialValues: initialValues,
     validationSchema: validationSchema,
     onSubmit: async (values: any) => {
-      dispatch(registrationStart());
-
       try {
-        const authToken = localStorage.getItem("authToken");
-        const headers = {
-          Authorization: `Bearer ${authToken}`,
-          "Content-Type": "application/json",
-        };
+        if (isEditing && editeData.id) {
+          const updatedData = {
+            id: editeData.id,
+            firstname: values.firstname,
+            lastname: values.lastname,
+            username: values.username,
+            email: values.email,
+            password: values.password,
+            phone: values.phone,
+            role: values.role,
+          };
 
-        let response;
-
-        if (isEditing) {
-          // Edit mode: Make a PUT request to update user's data
-          response = await axios.put(
-            `http://192.168.2.68:3001/user/${initialValues.id}`,
-            {
-              username: values.userName,
-              firstname: values.firstName,
-              lastname: values.lastName,
-              email: values.email,
-              password: values.password,
-              phone: values.mobile,
-              role: values.role,
-            },
-            {
-              headers: headers,
-            }
+          // Dispatch the editTeacher action
+          const resultAction = await dispatch(
+            editTeacher({
+              teacherId: editeData.id,
+              updatedData: updatedData,
+            })
           );
+
+          if (editTeacher.fulfilled.match(resultAction)) {
+            // Editing is done, reset editData
+            setEditeData({ isEditing: false, initialValues: {} });
+          } else if (editTeacher.rejected.match(resultAction)) {
+            // Handle rejection
+            console.error("Edit rejected:", resultAction.error);
+          }
         } else {
-          // Registration mode: Make a POST request to create a new user
-          response = await axios.post(
-            "http://192.168.2.68:3001/auth/signup",
-            {
-              username: values.userName,
-              firstname: values.firstName,
-              lastname: values.lastName,
-              email: values.email,
-              password: values.password,
-              phone: values.mobile,
-              role: values.role,
-            },
-            {
-              headers: headers,
-            }
-          );
-        }
-
-        if (response.status === 200) {
-          dispatch(registrationSuccess());
-          console.log(
-            isEditing ? "Edit successful" : "Registration successful",
-            response.data
-          );
+          console.log(values, "hello values my friend ");
+          await dispatch(registerUser(values));
         }
       } catch (error: any) {
-        dispatch(registrationFailure(error.message));
-        console.error(isEditing ? "Edit error" : "Registration error", error);
+        console.error("Error:", error.message);
       }
     },
   });
@@ -120,51 +97,51 @@ const RegistrationForm = ({ initialValues, isEditing }: any) => {
             <Grid item xs={12} sm={6}>
               <TextField
                 label="First Name"
-                name="firstName"
+                name="firstname"
                 fullWidth
-                value={formik.values.firstName}
+                // value={formik.values.firstname}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 error={
-                  formik.touched.firstName && Boolean(formik.errors.firstName)
+                  formik.touched.firstname && Boolean(formik.errors.firstname)
                 }
                 helperText={
-                  formik.touched.firstName &&
-                  (formik.errors.firstName as React.ReactNode)
+                  formik.touched.firstname &&
+                  (formik.errors.firstname as React.ReactNode)
                 }
               />
             </Grid>
             <Grid item xs={12} sm={6}>
               <TextField
                 label="Last Name"
-                name="lastName"
+                name="lastname"
                 fullWidth
-                value={formik.values.lastName}
+                value={formik.values.lastname}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 error={
-                  formik.touched.lastName && Boolean(formik.errors.lastName)
+                  formik.touched.lastname && Boolean(formik.errors.lastname)
                 }
                 helperText={
-                  formik.touched.lastName &&
-                  (formik.errors.lastName as React.ReactNode)
+                  formik.touched.lastname &&
+                  (formik.errors.lastname as React.ReactNode)
                 }
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
-                label="Username"
-                name="userName"
+                label="username"
+                name="username"
                 fullWidth
-                value={formik.values.userName}
+                value={formik.values.username}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 error={
-                  formik.touched.userName && Boolean(formik.errors.userName)
+                  formik.touched.username && Boolean(formik.errors.username)
                 }
                 helperText={
-                  formik.touched.userName &&
-                  (formik.errors.userName as React.ReactNode)
+                  formik.touched.username &&
+                  (formik.errors.username as React.ReactNode)
                 }
               />
             </Grid>
@@ -204,16 +181,16 @@ const RegistrationForm = ({ initialValues, isEditing }: any) => {
             </Grid>
             <Grid item xs={12}>
               <TextField
-                label="Mobile"
-                name="mobile"
+                label="phone"
+                name="phone"
                 fullWidth
-                value={formik.values.mobile}
+                value={formik.values.phone}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                error={formik.touched.mobile && Boolean(formik.errors.mobile)}
+                error={formik.touched.phone && Boolean(formik.errors.phone)}
                 helperText={
-                  formik.touched.mobile &&
-                  (formik.errors.mobile as React.ReactNode)
+                  formik.touched.phone &&
+                  (formik.errors.phone as React.ReactNode)
                 }
               />
             </Grid>

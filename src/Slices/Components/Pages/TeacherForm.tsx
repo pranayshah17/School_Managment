@@ -1,4 +1,3 @@
-
 import {
   Button,
   Container,
@@ -15,11 +14,7 @@ import axios from "axios";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useAppDispatch } from "../../../Store/Store";
-import {
-  registrationFailure,
-  registrationStart,
-  registrationSuccess,
-} from "../../../login_signup/RegisterSlice";
+import { registerUser } from "../../../login_signup/RegisterSlice";
 // import { useAppDispatch } from "../Store/Store";
 
 const RegistrationForm = () => {
@@ -54,8 +49,6 @@ const RegistrationForm = () => {
     },
     validationSchema: validationSchema,
     onSubmit: async (values: any) => {
-      dispatch(registrationStart());
-
       try {
         const authToken = localStorage.getItem("authToken");
         const headers = {
@@ -78,14 +71,11 @@ const RegistrationForm = () => {
             headers: headers,
           }
         );
-
-        // On successful response
-        dispatch(registrationSuccess());
-        console.log("Registration successful", response.data);
+        dispatch(registerUser(values));
+        console.log("Registration successful----", response.data);
       } catch (error: any) {
-        // On error
-        dispatch(registrationFailure(error.message));
         console.error("Registration error", error);
+        throw error;
       }
     },
   });
